@@ -34,9 +34,9 @@ class CycleModel:
 
 		for edge in f:
 			adj = [[] for _ in range(self.G.size + 1)]
-			for edge in Tl:
-				adj[edge.u].append(edge)
-				adj[edge.v].append(edge)
+			for edge2 in Tl:
+				adj[edge2.u].append(edge2)
+				adj[edge2.v].append(edge2)
 			C = []
 			dfs(edge.u, -1, adj, C)
 			C.append(edge)
