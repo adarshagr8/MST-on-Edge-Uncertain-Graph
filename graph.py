@@ -70,6 +70,14 @@ class UncertainGraph:
             u, v, lower, upper, actual = list(map(int, input("Enter edge " + str(i + 1) + " : ").split()))
             self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
 
+    def buildFromFile(self, s):
+        f = open(s, "r")
+        self.size = int(f.readline())
+        m = int(f.readline())
+        for i in range(m):
+            u, v, lower, upper, actual = map(int, f.readline().split())
+            self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
+
     def output(self):
         print(self.size)
         print(self.edges)

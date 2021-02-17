@@ -5,15 +5,18 @@ class Preprocessor:
 		self.query = set()
 		self.G = g
 		edgeSet = self.G.edges
-		Tl = lowerLimitTree(edgeSet)
-		Tu = upperLimitTree(edgeSet)
+		self.Tl = lowerLimitTree(edgeSet)
+		self.Tu = upperLimitTree(edgeSet)
 		newEdge = findIntersection(Tl, Tu)
 		while len(newEdge):
 			for edge in newEdge:
 				query.add(edge)
 				edgeSet.erase(edge)
-			Tl = lowerLimitTree(edgeSet)
-			Tu = upperLimitTree(edgeSet)
+				edge.lower = edge.actual
+				edge.upper = edge.actual
+				edgeSet.add(edge)
+			self.Tl = lowerLimitTree(edgeSet)
+			self.Tu = upperLimitTree(edgeSet)
 			newEdge = findIntersection(Tl, Tu)
 
 	def lowerOrderingComparator(e1, e2):
