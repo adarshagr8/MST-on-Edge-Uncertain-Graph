@@ -33,53 +33,44 @@ class Graph:
         self.size = len(edgeList)
         self.adj = [[] for i in range(n)]
         for e in edgeList:
-            self.addEdge(e.u, e.v)
+            self.addEdge(e)
             
-    def addEdge(self, a, b):
-        self.adj[a].append(b)
-        self.adj[b].append(a)
-        self.edges.append((a,b))
+    def addEdge(self, edge):
+        self.adj[edge.u].append(edge.v)
+        self.adj[edge.v].append(edge.u)
+        self.edges.append(edge)
     
     def kruskalMST(self):
         comps = UnionFind(self.size + 1)
-        mstEdges = []
+        mstEdges = set()
         for e in self.edges:
-            if comps.unite(e[0], e[1]):
-                mstEdges.append(e)
+            if comps.unite(e.u, e.v):
+                mstEdges.add(e)
         return mstEdges
     
 class UncertainEdge:
-    def __init__(self, u, v, lower, upper, actual):
+    def __init__(self, u, v, lower, upper, actual, index):
         self.u = u
         self.v = v
         self.lower = lower
         self.upper = upper
         self.actual = actual
-    
+        self.index = index
+        self.trivial = (lower == upper)
     
     
 class UncertainGraph:
     def __init__(self):
-        self.edges = []
+        self.edges = set()
         
     def buildFromInput(self):
         self.size = int(input("Enter number of nodes: "))
         m = int(input("Enter number of edges: "))
         for i in range(m):
             u, v, lower, upper, actual = list(map(int, input("Enter edge " + str(i + 1) + " : ").split()))
-            self.edges.append(UncertainEdge(u, v, lower, upper, actual))
+            self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
 
     def output(self):
         print(self.size)
         print(self.edges)
-        
-    
-    
-class UncertainMSTSolver(UncertainGraph):
-    def __init__(self, g):
-        super(UncertainGraph,g)
 
-# g = UncertainGraph()
-# g.buildFromInput()
-# x = UncertainMSTSolver(g)
-# print(x)
