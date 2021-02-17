@@ -58,6 +58,10 @@ class UncertainEdge:
         self.index = index
         self.trivial = (lower == upper)
     
+    def query(self):
+        self.lower = self.upper = self.actual
+        self.trivial = True
+        return self.actual
     
 class UncertainGraph:
     def __init__(self):
@@ -80,8 +84,7 @@ class UncertainGraph:
 
     def query(self, edge):
         self.edges.erase(edge)
-        edge.lower = edge.actual
-        edge.upper = edge.actual
+        edge.query()
         self.edge.add(edge)
         
     def output(self):
