@@ -175,19 +175,21 @@ class BipartiteGraph:
 
 
 # test for minimum vertex cover
-n = int(input())
-grid = []
-for i in range(n):
-    grid.append(input())
+# n = int(input())
+# grid = []
+# for i in range(n):
+#     grid.append(input())
 
-edges = []
-for i in range(n):
-    for j in range(n):
-        if grid[i][j] == 'o':
-            edges.append((i+1, j+1))
+# edges = []
+# for i in range(n):
+#     for j in range(n):
+#         if grid[i][j] == 'o':
+#             edges.append((i+1, j+1))
 
-graph = BipartiteGraph(edges)
-ans = graph.minimumVertexCover()
-print(len(ans))
-for i in ans:
-    print(i[0], " ", i[1])
+# graph = BipartiteGraph(edges)
+# ans = graph.minimumVertexCover()
+# print(len(ans))
+# for i in ans:
+#     print(i[0], " ", i[1])
+
+

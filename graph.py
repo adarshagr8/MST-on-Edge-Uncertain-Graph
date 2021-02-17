@@ -88,3 +88,47 @@ class UncertainGraph:
         print(self.size)
         print(self.edges)
 
+class DynamicForest:
+    def __init__(self, n):
+        self.size = n
+        self.edges = set()
+        self.adj = [set() for i in range(n + 1)]
+        self.comps = UnionFind(n + 1)
+
+    def addEdge(self, edge):
+        self.adj[edge.u].add(edge)
+        self.adj[edge.v].add(edge)
+        edges.add(edge)
+        self.comps.unite(edge.u, edge.v)
+
+    def removeEdge(self, edge):
+        self.adj[edge.u].discard(edge)
+        self.adj[edge.v].discard(edge)
+        edges.discard(edge)
+        self.comps = UnionFind(n + 1)
+        for e in edges:
+            self.comps.unite(e.u, e.v)
+
+    def cycleCheck(self, edge):
+        return self.comps.findSet(edge.u) == self.comps.findSet(edge.v)
+
+    def dfs(self, node, target, cycleEdges):
+        if node == target:
+            return 1
+        for e in self.adj[node]:
+            other = e.v
+            if other == node:
+                other = e.u
+            if self.dfs(other, target, cycleEdges):
+                cycleEdges.append(e)
+                return 1
+        return 0
+
+
+    def getCycle(self, edge):
+        cycleEdges = [edge]
+        self.dfs(edge.u, edge.v, cycleEdges)
+        return cycleEdges
+
+
+
