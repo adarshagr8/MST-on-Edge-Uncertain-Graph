@@ -4,19 +4,14 @@ class Preprocessor:
 	def __init__(self, g):
 		self.query = set()
 		self.G = g
-		edgeSet = self.G.edges
-		self.Tl = lowerLimitTree(edgeSet)
-		self.Tu = upperLimitTree(edgeSet)
+		self.Tl = lowerLimitTree()
+		self.Tu = upperLimitTree()
 		newEdge = findIntersection(Tl, Tu)
 		while len(newEdge):
 			for edge in newEdge:
-				query.add(edge)
-				edgeSet.erase(edge)
-				edge.lower = edge.actual
-				edge.upper = edge.actual
-				edgeSet.add(edge)
-			self.Tl = lowerLimitTree(edgeSet)
-			self.Tu = upperLimitTree(edgeSet)
+				self.G.query(edge)
+			self.Tl = lowerLimitTree()
+			self.Tu = upperLimitTree()
 			newEdge = findIntersection(Tl, Tu)
 
 	def lowerOrderingComparator(e1, e2):
@@ -48,12 +43,12 @@ class Preprocessor:
 		return e1.index - e2.index
 
 	def lowerLimitTree(edges):
-		lowerEdgeOrdering = sorted(edges, key = cmp_to_key(lowerOrderingComparator))
+		lowerEdgeOrdering = sorted(self.G.edges, key = cmp_to_key(lowerOrderingComparator))
 		g = Graph(lowerEdgeOrdering)
 		return g.kruskalMST()
 
 	def upperLimitTree(edges):
-		upperEdgeOrdering = sorted(edges, key = cmp_to_key(upperOrderingComparator))
+		upperEdgeOrdering = sorted(self.G.edges, key = cmp_to_key(upperOrderingComparator))
 		g = Graph(upperEdgeOrdering)
 		return g.kruskalMST()
 

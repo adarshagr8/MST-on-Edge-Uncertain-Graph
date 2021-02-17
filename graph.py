@@ -78,6 +78,12 @@ class UncertainGraph:
             u, v, lower, upper, actual = map(int, f.readline().split())
             self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
 
+    def query(self, edge):
+        self.edges.erase(edge)
+        edge.lower = edge.actual
+        edge.upper = edge.actual
+        self.edge.add(edge)
+        
     def output(self):
         print(self.size)
         print(self.edges)

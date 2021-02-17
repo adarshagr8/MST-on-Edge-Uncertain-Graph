@@ -59,16 +59,16 @@ class CycleModel:
 						secondInd = i
 				secondEdge = C[secondInd]
 				if not firstEdge.trivial:
-					weight = query(firstEdge)
+					self.G.query(firstEdge)
 					C.remove(firstEdge)
-					firstEdge.lower = weight
-					firstEdge.upper = weight
+					firstEdge.lower = firstEdge.actual
+					firstEdge.upper = firstEdge.actual
 					C.append(firstEdge)
 				if not secondEdge.trivial:
-					weight = query(secondEdge)
+					self.G.query(secondEdge)
 					C.remove(secondEdge)
-					secondEdge.lower = weight
-					secondEdge.upper = weight
+					secondEdge.lower = secondEdge.actual
+					secondEdge.upper = secondEdge.actual
 					C.append(secondEdge)
 			if len(C):
 				uppers = []
@@ -79,12 +79,3 @@ class CycleModel:
 					if edge.upper == uppers[-1] and (edge.trivial or edge.lower >= uppers[-2]):
 						Tl.erase(edge)
 						break
-
-	def query(edge):
-		self.Q.add(edge)
-		self.queryCount += 1
-		return edge.actual
-
-
-	def calculateAccuracy():
-		pass
