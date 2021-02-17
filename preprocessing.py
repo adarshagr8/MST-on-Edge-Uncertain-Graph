@@ -14,7 +14,7 @@ class Preprocessor:
 				edgeSet.erase(edge)
 			Tl = lowerLimitTree(edgeSet)
 			Tu = upperLimitTree(edgeSet)
-			newEdge = set()
+			newEdge = findIntersection(Tl, Tu)
 
 	def lowerOrderingComparator(e1, e2):
 		if e1.lower != e2.lower:
