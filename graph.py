@@ -12,7 +12,7 @@ class UnionFind:
     def findSet(self, v):
         if self.parent[v] == v:
             return v
-        self.parent[v] = self.findSet(parent[v])
+        self.parent[v] = self.findSet(self.parent[v])
         return self.parent[v]
     
     def unite(self, a, b):
@@ -63,6 +63,11 @@ class UncertainEdge:
         self.trivial = True
         return self.actual
     
+    def __str__(self):
+        return str(self.u) + ' ' + str(self.v) + ' ' + str(self.lower) + ' ' + str(self.upper) + ' ' + str(self.actual)
+
+    __repr__ = __str__
+    
 class UncertainGraph:
     def __init__(self):
         self.edges = set()
@@ -76,8 +81,8 @@ class UncertainGraph:
 
     def buildFromFile(self, s):
         f = open(s, "r")
-        self.size = int(f.readline())
-        m = int(f.readline())
+        self.size, m = map(int, f.readline().split())
+
         for i in range(m):
             u, v, lower, upper, actual = map(int, f.readline().split())
             self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
@@ -101,28 +106,30 @@ class DynamicForest:
     def addEdge(self, edge):
         self.adj[edge.u].add(edge)
         self.adj[edge.v].add(edge)
-        edges.add(edge)
+        self.edges.add(edge)
         self.comps.unite(edge.u, edge.v)
 
     def removeEdge(self, edge):
         self.adj[edge.u].discard(edge)
         self.adj[edge.v].discard(edge)
-        edges.discard(edge)
-        self.comps = UnionFind(n + 1)
-        for e in edges:
+        self.edges.discard(edge)
+        self.comps = UnionFind(self.size + 1)
+        for e in self.edges:
             self.comps.unite(e.u, e.v)
 
     def cycleCheck(self, edge):
         return self.comps.findSet(edge.u) == self.comps.findSet(edge.v)
 
-    def dfs(self, node, target, cycleEdges):
+    def dfs(self, node, target, cycleEdges, par):
         if node == target:
             return 1
         for e in self.adj[node]:
             other = e.v
             if other == node:
                 other = e.u
-            if self.dfs(other, target, cycleEdges):
+            if other == par:
+                continue
+            if self.dfs(other, target, cycleEdges, node):
                 cycleEdges.append(e)
                 return 1
         return 0
@@ -130,7 +137,7 @@ class DynamicForest:
 
     def getCycle(self, edge):
         cycleEdges = [edge]
-        self.dfs(edge.u, edge.v, cycleEdges)
+        self.dfs(edge.u, edge.v, cycleEdges, -1)
         return cycleEdges
 
 

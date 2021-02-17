@@ -1,5 +1,7 @@
-import graph
-import bipartite
+from graph import *
+from bipartite import *
+from functools import cmp_to_key
+
 
 def compareEdges(e, f):
 	if e.lower != f.lower:
@@ -18,6 +20,7 @@ def optimalQuerySet(g):
 		sortedEdges.append(e)
 
 	sortedEdges = sorted(sortedEdges, key = cmp_to_key(compareEdges))
+	print(sortedEdges)
 	common = []
 	choices = []
 	curgraph = DynamicForest(g.size)
@@ -30,7 +33,7 @@ def optimalQuerySet(g):
 		cycle = curgraph.getCycle(e)
 		curgraph.addEdge(e)
 		# check case (a)
-		bool hasMaximal = True
+		hasMaximal = True
 		candidate = cycle[0]
 		for e in cycle:
 			if e.upper > candidate.upper:
@@ -45,7 +48,7 @@ def optimalQuerySet(g):
 			continue
 
 		# check case (b)
-		bool flag = False
+		flag = False
 		for e in cycle:
 			if e.actual > candidate.actual:
 				flag = True
@@ -98,6 +101,8 @@ def optimalQuerySet(g):
 			newchoices.append((d, newB))
 
 	choices = newchoices
+	
+	
 	# PHASE 3
 	# build bipartite graph
 	leftEdgeToIndex = {}
@@ -130,3 +135,13 @@ def optimalQuerySet(g):
 		else:
 			common.append(rightEdges[index])
 	return common
+
+# import os
+# script_dir = os.path.dirname(__file__)
+# rel_path = "tests/test2.txt"
+# abs_file_path = os.path.join(script_dir, rel_path)
+
+# inputgraph = UncertainGraph()
+# inputgraph.buildFromFile(abs_file_path)
+# print(inputgraph.edges)
+# print(optimalQuerySet(inputgraph))
