@@ -1,4 +1,4 @@
-import graph
+from graph import *
 from functools import cmp_to_key
 
 class Preprocessor:

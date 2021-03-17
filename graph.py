@@ -71,7 +71,14 @@ class UncertainEdge:
 class UncertainGraph:
     def __init__(self):
         self.edges = set()
-        
+    
+    def buildFromParameters(self, n, edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual):
+        self.size = n
+        m = len(edgeFrom)
+        assert len(edgeTo) == m and len(edgeLo) == m and len(edgeHi) == m and len(edgeActual) == m
+        for i in range(m):
+            self.edges.add(UncertainEdge(edgeFrom[i], edgeTo[i], edgeLo[i], edgeHi[i], edgeActual[i]))
+            
     def buildFromInput(self):
         self.size = int(input("Enter number of nodes: "))
         m = int(input("Enter number of edges: "))
