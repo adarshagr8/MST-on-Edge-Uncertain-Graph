@@ -17,8 +17,10 @@ for i in range(1, 8):
 	abs_file_path = os.path.join(script_dir, rel_path)
 	g = UncertainGraph()
 	g.buildFromFile(abs_file_path)
-	optimalSet = optimalQuerySet(g)
-	assert checkOPT(g, optimalSet)
+	print(g)
+	assert checkOPT(g, optimalQuerySet(g))
+	print(len(optimalQuerySet(g)))
+	print(optimalQuerySet(g))
 	# algoCycleObject = CycleModel(g)
 	# algoCycleQuery = algoCycleObject.Q
 	# assert len(algoCycleQuery) <= 2 * len(optimalSet) and checkQuerySet(algoCycleQuery)
