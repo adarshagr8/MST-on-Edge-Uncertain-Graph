@@ -1,6 +1,7 @@
 from graph import *
 from bipartite import *
 from functools import cmp_to_key
+from copy import deepcopy
 
 
 def compareEdges(e, f):
@@ -31,6 +32,8 @@ def optimalQuerySet(g):
 			curgraph.addEdge(e)
 			continue
 		cycle = curgraph.getCycle(e)
+		# sanity check for cycle
+		assert len(cycle) > 1
 		curgraph.addEdge(e)
 		# check case (a)
 		hasMaximal = True
@@ -70,9 +73,10 @@ def optimalQuerySet(g):
 		if flag:
 			# update candidate, remove from curgraph and add to common and back to sortedEdges
 			curgraph.removeEdge(candidate)
-			common.append(curgraph)
-			candidate.query()
-			sortedEdges.append(candidate)
+			common.append(candidate)
+			updatedCandidate = deepcopy(candidate)
+			updatedCandidate.query()
+			sortedEdges.append(updatedCandidate)
 			sortedEdges = sorted(sortedEdges, key = cmp_to_key(compareEdges))
 			continue
 		# check case (c)
@@ -134,6 +138,9 @@ def optimalQuerySet(g):
 			common.append(leftEdges[index])
 		else:
 			common.append(rightEdges[index])
+	#sanity check for no repetition in answer
+	commonSet = set(common)
+	assert len(common) == len(commonSet)
 	return common
 
 # import os

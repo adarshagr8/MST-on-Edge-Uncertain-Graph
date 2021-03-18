@@ -1,10 +1,11 @@
 from graph import *
 from functools import cmp_to_key
+from copy import deepcopy
 
 class Preprocessor:
 	def __init__(self, g):
 		self.query = set()
-		self.G = g
+		self.G = deepcopy(g)
 		self.Tl = lowerLimitTree()
 		self.Tu = upperLimitTree()
 		newEdge = findIntersection(Tl, Tu)
@@ -43,12 +44,12 @@ class Preprocessor:
 				return e2.lower - e1.lower
 		return e1.index - e2.index
 
-	def lowerLimitTree(edges):
+	def lowerLimitTree(self):
 		lowerEdgeOrdering = sorted(self.G.edges, key = cmp_to_key(lowerOrderingComparator))
 		g = Graph(lowerEdgeOrdering)
 		return g.kruskalMST()
 
-	def upperLimitTree(edges):
+	def upperLimitTree(self):
 		upperEdgeOrdering = sorted(self.G.edges, key = cmp_to_key(upperOrderingComparator))
 		g = Graph(upperEdgeOrdering)
 		return g.kruskalMST()

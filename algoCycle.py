@@ -1,10 +1,11 @@
 import graph
 from preprocessing import Preprocessor
 from collections import deque
+from copy import deepcopy
 
 class CycleModel:
 	def __init__(self, g):
-		self.G = g
+		self.G = deepcopy(g)
 		self.queryCount = 0
 		p = Preprocessor(g)
 		self.Q = p.query
