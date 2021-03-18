@@ -16,6 +16,8 @@ for i in range(1, 8):
 	g.buildFromFile(abs_file_path)
 	print(g)
 	assert checkOPT(g, optimalQuerySet(g))
+	print(len(optimalQuerySet(g)))
+	print(optimalQuerySet(g))
 	print("Test " + str(i) + " passed!")
 
 
