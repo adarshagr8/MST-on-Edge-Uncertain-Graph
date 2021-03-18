@@ -2,6 +2,9 @@
 from graph import *
 from checker import *
 from optimal import *
+from generator import *
+from algoCycle import *
+import random
 import os
 
 script_dir = os.path.dirname(__file__)
@@ -14,8 +17,11 @@ for i in range(1, 8):
 	abs_file_path = os.path.join(script_dir, rel_path)
 	g = UncertainGraph()
 	g.buildFromFile(abs_file_path)
-	print(g)
-	assert checkOPT(g, optimalQuerySet(g))
+	optimalSet = optimalQuerySet(g)
+	assert checkOPT(g, optimalSet)
+	# algoCycleObject = CycleModel(g)
+	# algoCycleQuery = algoCycleObject.Q
+	# assert len(algoCycleQuery) <= 2 * len(optimalSet) and checkQuerySet(algoCycleQuery)
 	print("Test " + str(i) + " passed!")
 
 
@@ -29,9 +35,13 @@ for i in range(1, 8):
 testcases = 0
 # testcases = int(input("Enter number of cases to generate and test: "))
 for i in range(1, testcases + 1):
-	g = UncertainGraph()
-	# call generator
-	optimalQuerySet(g)
+	generatorObject = GraphGenerator()
+	g = costructGraph(random.randint(10,20), random.randint(20,30), random.uniform(0,100), random.uniform(100,200))
+	optimalSet = optimalQuerySet(g)
+	assert checkOPT(g, optimalSet)
+	# algoCycleObject = CycleModel(g)
+	# algoCycleQuery = algoCycleObject.Q
+	# assert len(algoCycleQuery) <= 2 * len(optimalSet) and checkQuerySet(algoCycleQuery)
 	print("Random test " + str(i) + " passed!")
 
 
