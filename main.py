@@ -9,13 +9,13 @@ script_dir = os.path.dirname(__file__)
 # TESTING for optimal query set
 # hand-made cases
 print("TESTING ON HAND-MADE CASES...")
-for i in range(1, 3):
+for i in range(1, 8):
 	rel_path = "tests/test" + str(i) + ".txt"
 	abs_file_path = os.path.join(script_dir, rel_path)
 	g = UncertainGraph()
 	g.buildFromFile(abs_file_path)
 	print(g)
-	print(checkOPT(g, optimalQuerySet(g)))
+	assert checkOPT(g, optimalQuerySet(g))
 	print("Test " + str(i) + " passed!")
 
 
@@ -26,7 +26,8 @@ for i in range(1, 3):
 
 
 # randomly generated cases
-testcases = int(input("Enter number of cases to generate and test: "))
+testcases = 0
+# testcases = int(input("Enter number of cases to generate and test: "))
 for i in range(1, testcases + 1):
 	g = UncertainGraph()
 	# call generator

@@ -6,11 +6,18 @@ eps = 1e-9
 def checkQuerySet(g, querySet):
 	# build updated graph by querying edges in the query set
 	updatedGraph = deepcopy(g)
+	newQuerySet = set()
+	for e in querySet:
+		newQuerySet.add((e.u, e.v, e.lower, e.upper, e.actual))
+
+	# print("Query Set: ", querySet, newQuerySet)
 	for e in updatedGraph.edges:
-		if e in querySet:
+		# print(e, e in querySet)
+		if (e.u, e.v, e.lower, e.upper, e.actual) in newQuerySet:
+			# print("Found ", e)
 			e.query()
-	print("Updated Graph:")
-	print(updatedGraph)
+	# print("Updated Graph:")
+	# print(updatedGraph)
 	# find a candidate uncertain MST in updated graph
 	# we only care about non-trivial edges of uncertain MST as trivial edges can be interchanged
 	# for this we need to assign unique weights to all non-trivial edges in a particular realization
@@ -76,7 +83,7 @@ def bruteOPT(g):
 
 
 def checkOPT(g, querySet):
-	print(querySet)
-	assert len(querySet) == len(bruteOPT(g))
+	# print(bruteOPT(g))
+	# assert len(querySet) == len(bruteOPT(g))
 	return checkQuerySet(g, querySet) and len(querySet) == len(bruteOPT(g))
 
