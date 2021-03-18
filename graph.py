@@ -30,8 +30,12 @@ class UnionFind:
     
 class Graph:
     def __init__(self, edgeList):
-        self.size = len(edgeList)
-        self.adj = [[] for i in range(n)]
+        self.size = 0
+        self.edges = []
+        for e in edgeList:
+            self.size = max(self.size, e.u)
+            self.size = max(self.size, e.v)
+        self.adj = [[] for i in range(self.size + 1)]
         for e in edgeList:
             self.addEdge(e)
             
@@ -103,6 +107,10 @@ class UncertainGraph:
         print(self.size)
         print(self.edges)
 
+    def __str__(self):
+        return str(self.edges)
+
+    __repr__ = __str__
 class DynamicForest:
     def __init__(self, n):
         self.size = n

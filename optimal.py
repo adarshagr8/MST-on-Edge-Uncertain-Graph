@@ -2,7 +2,7 @@ from graph import *
 from bipartite import *
 from functools import cmp_to_key
 from copy import deepcopy
-
+from checker import *
 
 def compareEdges(e, f):
 	if e.lower != f.lower:
@@ -33,6 +33,8 @@ def optimalQuerySet(g):
 			continue
 		cycle = curgraph.getCycle(e)
 		# sanity check for cycle
+		if len(cycle) <= 1:
+			print(cycle)
 		assert len(cycle) > 1
 		curgraph.addEdge(e)
 		# check case (a)
@@ -138,7 +140,7 @@ def optimalQuerySet(g):
 			common.append(leftEdges[index])
 		else:
 			common.append(rightEdges[index])
-	#sanity check for no repetition in answer
+	# sanity check for no repetition in answer
 	commonSet = set(common)
 	assert len(common) == len(commonSet)
 	return common

@@ -61,5 +61,8 @@ def bruteOPT(g):
 
 
 def checkOPT(g, querySet):
-	return checkQuerySet(g, querySet) and len(querySet) == len(bruteOPT(g, querySet))
+	print(querySet)
+	print(g)
+	print(checkQuerySet(g, querySet))
+	return checkQuerySet(g, querySet) and len(querySet) == len(bruteOPT(g))
 
