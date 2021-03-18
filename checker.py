@@ -1,6 +1,7 @@
 from graph import *
 from copy import deepcopy
 
+eps = 1e-9
 # checker for query set
 def checkQuerySet(g, querySet):
 	# build updated graph by querying edges in the query set
@@ -8,16 +9,30 @@ def checkQuerySet(g, querySet):
 	for e in updatedGraph.edges:
 		if e in querySet:
 			e.query()
-	# find lower limit MST in updates graph
-	lowerEdges = sorted(list(updatedGraph.edges), key = lambda x: x.lower)
+	print("Updated Graph:")
+	print(updatedGraph)
+	# find a candidate uncertain MST in updated graph
+	# we only care about non-trivial edges of uncertain MST as trivial edges can be interchanged
+	# for this we need to assign unique weights to all non-trivial edges in a particular realization
+	# It is easy to prove that such a realization always exists using the fact that open intervals contain infinite no of points
+	# and intersection of two open intervals if it exists is also open.
+	usedWeights = set()
+	for e in updatedGraph.edges:
+		if not e.trivial:
+			cur = e.lower + eps
+			while cur in usedWeights:
+				cur += eps
+			assert cur < e.upper
+			usedWeights.add(cur)
+			e.actual = cur
+				
+	lowerEdges = sorted(list(updatedGraph.edges), key = lambda x: x.actual)
 	lowerGraph = Graph(lowerEdges)
 	candidateMST = lowerGraph.kruskalMST()
-	# check if this lower limit MST stays an MST for all valid realizations
-	# But what if lower limit MST isn't unique? Then, all edges not present in all lower limit MSTs must be trivial
-	# => All possible MSTs can be converted to one another by swapping trivial edges only
-	# => Swapped edges are always maximal and trivial
-	# => If a lower limit MST stays an MST for all realizations, all lower limit MSTs stay an MST for all realizations
-	# => So checking only one lower limit MST is sufficient
+	# check if this candidate MST stays an MST for all valid realizations
+	# but what if the answer isn't unique? Then all possible answers will have non-trivial edges in common.
+	# => All possible uncertain MSTs can be converted to one another by swapping trivial edges only
+	# => So checking only one candidate MST is sufficient
 	# To check this, all non-MST edges must be always-maximal but not necessarily in a strict sense (i.e. >= is fine)
 	outsideEdges = []
 	for e in updatedGraph.edges:
@@ -62,7 +77,6 @@ def bruteOPT(g):
 
 def checkOPT(g, querySet):
 	print(querySet)
-	print(g)
-	print(checkQuerySet(g, querySet))
+	assert len(querySet) == len(bruteOPT(g))
 	return checkQuerySet(g, querySet) and len(querySet) == len(bruteOPT(g))
 

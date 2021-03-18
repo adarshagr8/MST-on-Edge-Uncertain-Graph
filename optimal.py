@@ -21,7 +21,7 @@ def optimalQuerySet(g):
 		sortedEdges.append(e)
 
 	sortedEdges = sorted(sortedEdges, key = cmp_to_key(compareEdges))
-	print(sortedEdges)
+	# print(sortedEdges)
 	common = []
 	choices = []
 	curgraph = DynamicForest(g.size)
@@ -33,8 +33,8 @@ def optimalQuerySet(g):
 			continue
 		cycle = curgraph.getCycle(e)
 		# sanity check for cycle
-		if len(cycle) <= 1:
-			print(cycle)
+		# if len(cycle) <= 1:
+		# 	print(cycle)
 		assert len(cycle) > 1
 		curgraph.addEdge(e)
 		# check case (a)
