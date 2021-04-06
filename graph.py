@@ -71,6 +71,15 @@ class UncertainEdge:
         return str(self.u) + ' ' + str(self.v) + ' ' + str(self.lower) + ' ' + str(self.upper) + ' ' + str(self.actual)
 
     __repr__ = __str__
+
+    def __eq__(self, other):
+        return (self.u, self.v, self.lower, self.upper, self.actual, self.index) == (other.u, other.v, other.lower, other.upper, other.actual, other.index)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.u, self.v, self.lower, self.upper, self.actual, self.index))
     
 class UncertainGraph:
     def __init__(self):
@@ -81,7 +90,7 @@ class UncertainGraph:
         m = len(edgeFrom)
         assert len(edgeTo) == m and len(edgeLo) == m and len(edgeHi) == m and len(edgeActual) == m
         for i in range(m):
-            self.edges.add(UncertainEdge(edgeFrom[i], edgeTo[i], edgeLo[i], edgeHi[i], edgeActual[i]))
+            self.edges.add(UncertainEdge(edgeFrom[i], edgeTo[i], edgeLo[i], edgeHi[i], edgeActual[i], i))
             
     def buildFromInput(self):
         self.size = int(input("Enter number of nodes: "))
@@ -99,9 +108,9 @@ class UncertainGraph:
             self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
 
     def query(self, edge):
-        self.edges.erase(edge)
+        # self.edges.remove(edge)
         edge.query()
-        self.edge.add(edge)
+        # self.edges.add(edge)
         
     def output(self):
         print(self.size)
@@ -111,6 +120,7 @@ class UncertainGraph:
         return str(self.edges)
 
     __repr__ = __str__
+
 class DynamicForest:
     def __init__(self, n):
         self.size = n

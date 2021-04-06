@@ -3,10 +3,13 @@ from numpy import random
 import numpy as np
 import random
 
-EPS = 1e-6
+EPS = 1e-9
 
 class GraphGenerator:
-	def getEdgeWeight(lo, hi, centre, deviation, trivialProbability):
+	def __init__(self, debug):
+		self.debug = debug
+
+	def getEdgeWeight(self, lo, hi, centre, deviation, trivialProbability):
 		probability = random.uniform(0,1)
 		if probability <= trivialProbability:
 			weight = random.uniform(lo, hi)
@@ -15,10 +18,12 @@ class GraphGenerator:
 		length = (hi - lo) * deviation
 		left = max(lo, left - length)
 		right = min(hi, left + length)
-		weight = random.uniform(left right)
+		weight = random.uniform(left, right)
 		return (lo, hi, weight)
 
-	def costructGraph(self, n, m, lo, hi, centre = None, deviation = 0.5, trivialProbability = 0.5):
+	def constructGraph(self, n, m, lo, hi, centre = None, deviation = 0.5, trivialProbability = 0.5):
+		if lo > hi:
+			lo, hi = hi, lo
 		if centre == None:
 			centre = (lo + hi) / 2
 		if n > 1000 or m < n-1 or m > n*(n - 1)//2:
@@ -31,6 +36,8 @@ class GraphGenerator:
 			assert False
 		if trivialProbability < 0 or trivialProbability > 1:
 			assert False
+		if self.debug:
+			print(f"Constructing graph with n = {n}, m = {m}, lo = {lo}, hi = {hi}, centre = {centre}, deviation = {deviation} and trivialProbability = {trivialProbability}.")
 		if lo != hi:
 			lo += EPS
 			hi -= EPS
@@ -48,7 +55,7 @@ class GraphGenerator:
 			edgeTo.append(parent[order[i]])
 			edgeSet.add((order[i], parent[order[i]]))
 			edgeSet.add((parent[order[i]], order[i]))
-			weights = getEdgeWeight(lo, hi, centre, deviation, trivialProbability)
+			weights = self.getEdgeWeight(lo, hi, centre, deviation, trivialProbability)
 			edgeLo.append(weights[0])
 			edgeHi.append(weights[1])
 			edgeActual.append(weights[2])
@@ -61,20 +68,22 @@ class GraphGenerator:
 			edgeTo.append(v)
 			edgeSet.add((u, v))
 			edgeSet.add((v, u))
-			weights = getEdgeWeight(lo, hi, centre, deviation, trivialProbability)
+			weights = self.getEdgeWeight(lo, hi, centre, deviation, trivialProbability)
 			edgeLo.append(weights[0])
 			edgeHi.append(weights[1])
 			edgeActual.append(weights[2])
 		graph = UncertainGraph()
-		graph.buildFromParameters(edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual)
+		graph.buildFromParameters(n, edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual)
 		return graph
 
 	# All the edges are trivial
-	def edgeCaseA(n, m, weight):
+	def edgeCaseA(self, n, m, weight):
 		return self.costructGraph(n, m, weight, weight, weight, 0, 1)
 
 	# All the edges are either lo or hi
-	def edgeCaseB(n, m, lo, hi):
+	def edgeCaseB(self, n, m, lo, hi):
+		if lo > hi:
+			lo, hi = hi, lo
 		if n > 1000 or m < n-1 or m > n*(n - 1)//2:
 			assert False
 		if lo < 0 or hi < lo:
@@ -118,10 +127,10 @@ class GraphGenerator:
 				weight = hi
 			edgeActual.append(weight)
 		graph = UncertainGraph()
-		graph.buildFromParameters(edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual)
+		graph.buildFromParameters(n, edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual)
 		return graph
 
 	# Complete Graph
-	def edgeCaseB(n, lo, hi, centre = None, deviation = 0.5, trivialProbability = 0.5):
+	def edgeCaseC(self, n, lo, hi, centre = None, deviation = 0.5, trivialProbability = 0.5):
 		return self.costructGraph(n, n*(n-1)//2, lo, hi, centre, deviation, trivialProbability)
 

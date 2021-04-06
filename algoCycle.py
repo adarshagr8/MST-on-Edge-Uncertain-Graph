@@ -12,14 +12,14 @@ class CycleModel:
 		self.Tl = p.Tl
 		self.Tu = p.Tu
 		f = self.G.edges
-		for edge in Tl:
+		for edge in self.Tl:
 			f.remove(edge)
 
 		def dfs(u, par, adj, C):
 			for v in adj[u]:
 				if v.v != par:
 					C.append(v)
-					dfs(v.v, u, parents, adj)
+					dfs(v.v, u, adj, C)
 
 		def check(edgeSet):
 			if len(edgeSet) <= 1:
@@ -35,12 +35,13 @@ class CycleModel:
 
 		for edge in f:
 			adj = [[] for _ in range(self.G.size + 1)]
-			for edge2 in Tl:
+			for edge2 in self.Tl:
 				adj[edge2.u].append(edge2)
 				adj[edge2.v].append(edge2)
 			C = []
 			dfs(edge.u, -1, adj, C)
 			C.append(edge)
+			self.Tl.add(edge)
 			while check(C):
 				uppers = []
 				firstUpper = 0
@@ -73,10 +74,10 @@ class CycleModel:
 					C.append(secondEdge)
 			if len(C):
 				uppers = []
-				for edge in edgeSet:
+				for edge in C:
 					uppers.append(edge.upper)
 				uppers.sort()
-				for edge in edgeSet:
+				for edge in C:
 					if edge.upper == uppers[-1] and (edge.trivial or edge.lower >= uppers[-2]):
-						Tl.erase(edge)
+						self.Tl.remove(edge)
 						break

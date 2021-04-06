@@ -18,12 +18,13 @@ for i in range(1, 8):
 	g = UncertainGraph()
 	g.buildFromFile(abs_file_path)
 	print(g)
-	assert checkOPT(g, optimalQuerySet(g))
-	print(len(optimalQuerySet(g)))
-	print(optimalQuerySet(g))
-	# algoCycleObject = CycleModel(g)
-	# algoCycleQuery = algoCycleObject.Q
-	# assert len(algoCycleQuery) <= 2 * len(optimalSet) and checkQuerySet(algoCycleQuery)
+	optimalSet = optimalQuerySet(g)
+	assert checkOPT(g, optimalSet)
+	print(len(optimalSet))
+	print(optimalSet)
+	algoCycleObject = CycleModel(g)
+	algoCycleQuery = algoCycleObject.Q
+	assert len(algoCycleQuery) <= 2 * len(optimalSet) and checkQuerySet(g, algoCycleQuery)
 	print("Test " + str(i) + " passed!")
 
 
@@ -35,10 +36,11 @@ for i in range(1, 8):
 
 # randomly generated cases
 testcases = 0
-# testcases = int(input("Enter number of cases to generate and test: "))
+testcases = int(input("Enter number of cases to generate and test: "))
+debug = input("Do you want to print generator arguments? [Y/N]: ")
 for i in range(1, testcases + 1):
-	generatorObject = GraphGenerator()
-	g = costructGraph(random.randint(10,20), random.randint(20,30), random.uniform(0,100), random.uniform(100,200))
+	generatorObject = GraphGenerator(debug == 'Y')
+	g = generatorObject.constructGraph(random.randint(12,15), random.randint(15,22), random.uniform(0,100), random.uniform(100,200))
 	optimalSet = optimalQuerySet(g)
 	assert checkOPT(g, optimalSet)
 	# algoCycleObject = CycleModel(g)

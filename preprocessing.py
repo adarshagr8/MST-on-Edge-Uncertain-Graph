@@ -6,17 +6,17 @@ class Preprocessor:
 	def __init__(self, g):
 		self.query = set()
 		self.G = deepcopy(g)
-		self.Tl = lowerLimitTree()
-		self.Tu = upperLimitTree()
-		newEdge = findIntersection(Tl, Tu)
+		self.Tl = self.lowerLimitTree()
+		self.Tu = self.upperLimitTree()
+		newEdge = self.findIntersection(self.Tl, self.Tu)
 		while len(newEdge):
 			for edge in newEdge:
 				self.G.query(edge)
-			self.Tl = lowerLimitTree()
-			self.Tu = upperLimitTree()
-			newEdge = findIntersection(Tl, Tu)
+			self.Tl = self.lowerLimitTree()
+			self.Tu = self.upperLimitTree()
+			newEdge = self.findIntersection(self.Tl, self.Tu)
 
-	def lowerOrderingComparator(e1, e2):
+	def lowerOrderingComparator(self, e1, e2):
 		if e1.lower != e2.lower:
 			return e1.lower - e2.lower
 		else:
@@ -30,7 +30,7 @@ class Preprocessor:
 				return e2.upper - e1.upper
 		return e1.index - e2.index
 
-	def upperOrderingComparator(e1, e2):
+	def upperOrderingComparator(self, e1, e2):
 		if e1.upper != e2.upper:
 			return e1.upper - e2.upper
 		else:
@@ -45,16 +45,16 @@ class Preprocessor:
 		return e1.index - e2.index
 
 	def lowerLimitTree(self):
-		lowerEdgeOrdering = sorted(self.G.edges, key = cmp_to_key(lowerOrderingComparator))
+		lowerEdgeOrdering = sorted(self.G.edges, key = cmp_to_key(self.lowerOrderingComparator))
 		g = Graph(lowerEdgeOrdering)
 		return g.kruskalMST()
 
 	def upperLimitTree(self):
-		upperEdgeOrdering = sorted(self.G.edges, key = cmp_to_key(upperOrderingComparator))
+		upperEdgeOrdering = sorted(self.G.edges, key = cmp_to_key(self.upperOrderingComparator))
 		g = Graph(upperEdgeOrdering)
 		return g.kruskalMST()
 
-	def findIntersection(tl, tu):
+	def findIntersection(self, tl, tu):
 		ans = set()
 		for edge in tl:
 			if edge not in tu and not edge.trivial:

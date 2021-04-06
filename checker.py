@@ -8,12 +8,12 @@ def checkQuerySet(g, querySet):
 	updatedGraph = deepcopy(g)
 	newQuerySet = set()
 	for e in querySet:
-		newQuerySet.add((e.u, e.v, e.lower, e.upper, e.actual))
+		newQuerySet.add(e)
 
 	# print("Query Set: ", querySet, newQuerySet)
 	for e in updatedGraph.edges:
 		# print(e, e in querySet)
-		if (e.u, e.v, e.lower, e.upper, e.actual) in newQuerySet:
+		if e in newQuerySet:
 			# print("Found ", e)
 			e.query()
 	# print("Updated Graph:")
