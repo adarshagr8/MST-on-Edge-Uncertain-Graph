@@ -60,5 +60,6 @@ for i in range(1, testcases + 1):
     assert checkQuerySet(g, algoCycleQuery)
     assert len(algoCutQuery) <= 2 * len(optimalSet)
     assert checkQuerySet(g, algoCutQuery)
-    print("Algorithm Accuracy:", len(algoCycleQuery)/len(optimalQuerySet))
+    print("Cycle CR:", len(algoCycleQuery)/len(optimalQuerySet))
+    print("Cut CR:", len(algoCutQuery)/len(optimalQuerySet))
     print("Random test " + str(i) + " passed!")

@@ -8,11 +8,11 @@ class CutModel:
     def __init__(self, g):
         self.G = deepcopy(g)
         self.queryCount = 0
-        p = Preprocessor(g)
+        p = Preprocessor(self.G)
         # print("Preprocessing:", p.query)
-        self.Q = deepcopy(p.query)
-        self.Tl = deepcopy(p.Tl)
-        self.Tu = deepcopy(p.Tu)
+        self.Q = p.quer
+        self.Tl = p.Tl
+        self.Tu = p.Tu
         # print("Tu:", self.Tu)
         f = self.G.edges
         removed = set()
