@@ -10,10 +10,18 @@ import os
 
 script_dir = os.path.dirname(__file__)
 
+
+def CompetitiveRatio(a, b):
+    if b == 0:
+        return 1.0
+    else:
+        return a/b
+
+
 # TESTING for optimal query set
 # hand-made cases
 print("TESTING ON HAND-MADE CASES...")
-for i in range(1, 8):
+for i in range(1, 9):
     rel_path = "tests/test" + str(i) + ".txt"
     abs_file_path = os.path.join(script_dir, rel_path)
     g = UncertainGraph()
@@ -26,7 +34,10 @@ for i in range(1, 8):
     algoCycleQuery = algoCycleObject.Q
     algoCutObject = CutModel(g)
     algoCutQuery = algoCutObject.Q
-    # print("Algo Query:", algoCutQuery)
+    print("Algo Cycle Competitve Ratio:", CompetitiveRatio(len(
+        algoCycleQuery), len(optimalSet)))
+    print("Algo Cut Competitve Ratio:", CompetitiveRatio(len(
+        algoCutQuery), len(optimalSet)))
     assert len(algoCycleQuery) <= 2 * len(optimalSet)
     assert checkQuerySet(g, algoCycleQuery)
     assert len(algoCutQuery) <= 2 * len(optimalSet)
@@ -46,18 +57,22 @@ testcases = int(input("Enter number of cases to generate and test: "))
 debug = input("Do you want to print generator arguments? [Y/N]: ")
 for i in range(1, testcases + 1):
     generatorObject = GraphGenerator(debug == 'Y')
-    g = generatorObject.constructGraph(random.randint(12, 15), random.randint(
-        15, 22), random.uniform(0, 100), random.uniform(100, 200))
-    print(g)
+    g = generatorObject.constructGraphB(
+        100, 100, random.uniform(0, 100), random.uniform(100, 200))
+    # print(g)
     optimalSet = optimalQuerySet(g)
-    assert checkOPT(g, optimalSet)
+    # assert checkOPT(g, optimalSet)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q
     algoCutObject = CutModel(g)
     algoCutQuery = algoCutObject.Q
+    print("Algo Cycle Competitve Ratio:", CompetitiveRatio(len(
+        algoCycleQuery), len(optimalSet)))
+    print("Algo Cut Competitve Ratio:", CompetitiveRatio(len(
+        algoCutQuery), len(optimalSet)))
     assert len(algoCycleQuery) <= 2 * len(optimalSet)
     assert checkQuerySet(g, algoCycleQuery)
     assert len(algoCutQuery) <= 2 * len(optimalSet)
     assert checkQuerySet(g, algoCutQuery)
-    print("Algorithm Accuracy:", len(algoCycleQuery)/len(optimalQuerySet))
+    # print("Algorithm Accuracy:", len(algoCycleQuery)/len(optimalSet))
     print("Random test " + str(i) + " passed!")

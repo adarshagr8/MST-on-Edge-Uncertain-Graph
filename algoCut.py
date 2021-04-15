@@ -13,17 +13,6 @@ class CutModel:
         self.Q = deepcopy(p.query)
         self.Tl = deepcopy(p.Tl)
         self.Tu = deepcopy(p.Tu)
-        # print("Tu:", self.Tu)
-        f = self.G.edges
-        removed = set()
-        for edge in self.Tu:
-            removed.add((edge.u, edge.v))
-        erased = set()
-        for edge in f:
-            if (edge.u, edge.v) in removed or (edge.v, edge.u) in removed:
-                erased.add(edge)
-        for edge in erased:
-            f.remove(edge)
         g = list(deepcopy(self.Tu))
         g.sort(key=lambda x: -x.upper)
         # print("g: ", g)
@@ -51,6 +40,16 @@ class CutModel:
             # print("Tu:", self.Tu)
             # print("Removed Edge:", edge)
             adj = [[] for _ in range(self.G.size + 1)]
+            f = deepcopy(self.G.edges)
+            removed = set()
+            for edge2 in self.Tu:
+                removed.add((edge2.u, edge2.v))
+            erased = set()
+            for edge2 in f:
+                if (edge2.u, edge2.v) in removed or (edge2.v, edge2.u) in removed:
+                    erased.add(edge2)
+            for edge2 in erased:
+                f.remove(edge2)
             erased = None
             for edge2 in self.Tu:
                 if {edge2.u, edge2.v} == {edge.u, edge.v}:
@@ -59,16 +58,18 @@ class CutModel:
             for edge2 in self.Tu:
                 adj[edge2.u].append(edge2)
                 adj[edge2.v].append(edge2)
+            # print("f:", f)
             # print(edge.u, adj)
             component.clear()
             dfs(edge.u, -1, adj, 0)
             dfs(edge.v, -1, adj, 1)
             # print(component)
             C = [edge]
-            for edge in f:
+            for edge2 in f:
                 # print(edge, component[edge.u], component[edge.v])
-                if component[edge.u] != component[edge.v]:
-                    C.append(edge)
+                if component[edge2.u] != component[edge2.v]:
+                    C.append(edge2)
+            # print("C: ", C, edge)
             while check(C):
                 # print("C:", C)
                 firstLower = 1e9
