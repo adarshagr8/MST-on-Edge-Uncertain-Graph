@@ -40,16 +40,6 @@ class CutModel:
             # print("Tu:", self.Tu)
             # print("Removed Edge:", edge)
             adj = [[] for _ in range(self.G.size + 1)]
-            f = deepcopy(self.G.edges)
-            removed = set()
-            for edge2 in self.Tu:
-                removed.add((edge2.u, edge2.v))
-            erased = set()
-            for edge2 in f:
-                if (edge2.u, edge2.v) in removed or (edge2.v, edge2.u) in removed:
-                    erased.add(edge2)
-            for edge2 in erased:
-                f.remove(edge2)
             erased = None
             for edge2 in self.Tu:
                 if {edge2.u, edge2.v} == {edge.u, edge.v}:
@@ -64,12 +54,12 @@ class CutModel:
             dfs(edge.u, -1, adj, 0)
             dfs(edge.v, -1, adj, 1)
             # print(component)
-            C = [edge]
-            for edge2 in f:
+            C = []
+            for edge2 in self.G.edges:
                 # print(edge, component[edge.u], component[edge.v])
                 if component[edge2.u] != component[edge2.v]:
                     C.append(edge2)
-            # print("C: ", C, edge)
+            # print("C: ", C)
             while check(C):
                 # print("C:", C)
                 firstLower = 1e9
@@ -88,6 +78,7 @@ class CutModel:
                         secondLower = C[i].lower
                         secondInd = i
                 secondEdge = C[secondInd]
+                assert secondEdge.lower <= firstEdge.upper
                 # print("First: ", firstEdge, "Second: ", secondEdge)
                 if not firstEdge.trivial:
                     self.Q.add(deepcopy(firstEdge))
