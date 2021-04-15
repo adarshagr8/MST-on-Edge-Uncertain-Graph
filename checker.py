@@ -1,7 +1,7 @@
 from graph import *
 from copy import deepcopy
 
-eps = 1e-9
+eps = 1e-12
 # checker for query set
 def checkQuerySet(g, querySet):
 	# build updated graph by querying edges in the query set
@@ -24,6 +24,9 @@ def checkQuerySet(g, querySet):
 	# It is easy to prove that such a realization always exists using the fact that open intervals contain infinite no of points
 	# and intersection of two open intervals if it exists is also open.
 	usedWeights = set()
+	for e in updatedGraph.edges:
+		if e.trivial:
+			usedWeights.add(e.actual)
 	for e in updatedGraph.edges:
 		if not e.trivial:
 			cur = e.lower + eps
