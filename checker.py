@@ -1,7 +1,7 @@
 from graph import *
 from copy import deepcopy
 
-eps = 1e-9
+eps = 1e-12
 # checker for query set
 def checkQuerySet(g, querySet):
 	# build updated graph by querying edges in the query set
