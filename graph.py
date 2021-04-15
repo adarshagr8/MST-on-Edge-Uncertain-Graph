@@ -111,7 +111,9 @@ class UncertainGraph:
         self.size, m = map(int, f.readline().split())
 
         for i in range(m):
-            u, v, lower, upper, actual = map(int, f.readline().split())
+            u, v, lower, upper, actual = f.readline().split()
+            u, v = map(int, [u, v])
+            lower, upper, actual = map(float, [lower, upper, actual])
             self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
 
     def query(self, edge):

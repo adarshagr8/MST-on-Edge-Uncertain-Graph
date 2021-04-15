@@ -25,6 +25,9 @@ def checkQuerySet(g, querySet):
 	# and intersection of two open intervals if it exists is also open.
 	usedWeights = set()
 	for e in updatedGraph.edges:
+		if e.trivial:
+			usedWeights.add(e.actual)
+	for e in updatedGraph.edges:
 		if not e.trivial:
 			cur = e.lower + eps
 			while cur in usedWeights:
