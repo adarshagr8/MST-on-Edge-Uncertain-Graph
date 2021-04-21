@@ -29,7 +29,7 @@ for i in range(1, 10):
     optimalSet = optimalQuerySet(g)
     assert checkOPT(g, optimalSet)
     # print(len(optimalSet))
-    print(optimalSet)
+    # print(optimal Set)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q
     algoCutObject = CutModel(g)
@@ -38,18 +38,12 @@ for i in range(1, 10):
         algoCycleQuery), len(optimalSet)))
     print("Algo Cut Competitve Ratio:", CompetitiveRatio(len(
         algoCutQuery), len(optimalSet)))
-    print(len(algoCutQuery), len(optimalSet))
+    # print(len(algoCutQuery), len(optimalSet))
     assert len(algoCycleQuery) <= 2 * len(optimalSet)
     assert checkQuerySet(g, algoCycleQuery)
     assert len(algoCutQuery) <= 2 * len(optimalSet)
     assert checkQuerySet(g, algoCutQuery)
     print("Test " + str(i) + " passed!")
-
-
-# inputgraph = UncertainGraph()
-# inputgraph.buildFromFile(abs_file_path)
-# print(inputgraph.edges)
-# print(optimalQuerySet(inputgraph))
 
 
 # randomly generated cases

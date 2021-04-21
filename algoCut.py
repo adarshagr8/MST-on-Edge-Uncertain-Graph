@@ -3,27 +3,34 @@ from preprocessing import Preprocessor
 from collections import deque
 from copy import deepcopy
 
+# Base class to run the algorithm
+
 
 class CutModel:
+    # Initialise the class object
     def __init__(self, g):
         self.G = deepcopy(g)
         self.queryCount = 0
+        # Do pre-processing and get the initial query set
         p = Preprocessor(self.G)
-        # print("Preprocessing:", p.query)
         self.Q = deepcopy(p.query)
+        # Find the lower limit tree
         self.Tl = deepcopy(p.Tl)
+        # Find the upper limit tree
         self.Tu = deepcopy(p.Tu)
         g = list(deepcopy(self.Tu))
         g.sort(key=lambda x: -x.upper)
-        # print("g: ", g)
+        # g is the set of edges in upper limit tree sorted in descending order of upper limits
         component = {}
 
+        # DFS Function to traverse in the tree
         def dfs(u, par, adj, c):
             component[u] = c
             for v in adj[u]:
                 if v.u + v.v - u != par:
                     dfs(v.u + v.v - u, u, adj, c)
 
+        # Function to check whether the edgeSet contains in always minimal edge
         def check(edgeSet):
             if len(edgeSet) <= 1:
                 return False
@@ -36,9 +43,9 @@ class CutModel:
                     return False
             return True
 
+        # Go through each edge in g
         for edge in g:
-            # print("Tu:", self.Tu)
-            # print("Removed Edge:", edge)
+            # Construct the graph in adjacency list
             adj = [[] for _ in range(self.G.size + 1)]
             erased = None
             for edge2 in self.Tu:
@@ -48,22 +55,20 @@ class CutModel:
             for edge2 in self.Tu:
                 adj[edge2.u].append(edge2)
                 adj[edge2.v].append(edge2)
-            # print("f:", f)
-            # print(edge.u, adj)
+            # Do two DFS - once from each component
             component.clear()
             dfs(edge.u, -1, adj, 0)
             dfs(edge.v, -1, adj, 1)
-            # print(component)
+            # C stores the edge set denoting the "cut" created
             C = []
             for edge2 in self.G.edges:
-                # print(edge, component[edge.u], component[edge.v])
                 if component[edge2.u] != component[edge2.v]:
                     C.append(edge2)
-            # print("C: ", C)
+            # While C does not have always mininal edge
             while check(C):
-                # print("C:", C)
                 firstLower = 1e9
                 firstInd = 0
+                # Find the two edges with minimum lower limits
                 for i in range(len(C)):
                     if C[i].lower < firstLower:
                         firstLower = C[i].lower
@@ -79,7 +84,7 @@ class CutModel:
                         secondInd = i
                 secondEdge = C[secondInd]
                 assert secondEdge.lower <= firstEdge.upper
-                # print("First: ", firstEdge, "Second: ", secondEdge)
+                # If the first edge is not trivial, then query it
                 if not firstEdge.trivial:
                     self.Q.add(deepcopy(firstEdge))
                     self.G.query(firstEdge)
@@ -88,6 +93,7 @@ class CutModel:
                     firstEdge.upper = firstEdge.actual
                     firstEdge.trivial = True
                     C.append(firstEdge)
+                # If the second edge is not trivial, then query it
                 if not secondEdge.trivial:
                     self.Q.add(deepcopy(secondEdge))
                     self.G.query(secondEdge)
@@ -97,6 +103,7 @@ class CutModel:
                     secondEdge.trivial = True
                     C.append(secondEdge)
 
+            # If an always minimal edge is found, erase it from Upper Limit Tree
             if len(C):
                 if len(C) == 1:
                     self.Tu.add(C[0])
@@ -108,5 +115,4 @@ class CutModel:
                     for edge in C:
                         if edge.lower == lowers[0] and (edge.trivial or edge.upper <= lowers[1]):
                             self.Tu.add(edge)
-                            # print("Added Edge:", edge)
                             break

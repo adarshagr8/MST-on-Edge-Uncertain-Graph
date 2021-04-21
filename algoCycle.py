@@ -3,15 +3,20 @@ from preprocessing import Preprocessor
 from collections import deque
 from copy import deepcopy
 
+# Base class to run the algorithm
+
 
 class CycleModel:
+    # Initialise the class object
     def __init__(self, g):
         self.G = deepcopy(g)
         self.queryCount = 0
+        # Do pre-processing and get the initial query set
         p = Preprocessor(g)
-        # print("Preprocessing:", p.query)
         self.Q = deepcopy(p.query)
+        # Find the lower limit tree
         self.Tl = deepcopy(p.Tl)
+        # Find the upper limit tree
         self.Tu = deepcopy(p.Tu)
         f = self.G.edges
         removed = set()
@@ -23,9 +28,10 @@ class CycleModel:
                 erased.add(edge)
         for edge in erased:
             f.remove(edge)
-        # print("f: ", f)
+        # f is a set of edges not present in lower limit tree
         C = []
 
+        # DFS Function to traverse in the tree
         def dfs(u, par, adj, last, edges):
             if u == last:
                 C[:] = edges
@@ -35,6 +41,7 @@ class CycleModel:
                     dfs(v.u + v.v - u, u, adj, last, edges)
                     edges.remove(v)
 
+        # Function to check whether the edgeSet contains in always maximal edge
         def check(edgeSet):
             if len(edgeSet) <= 1:
                 return False
@@ -47,23 +54,24 @@ class CycleModel:
                     return False
             return True
 
+        # Go through each edge in f
         for edge in f:
-            # print("Tl:", self.Tl)
-            # print("Added Edge:", edge)
+            # Construct the graph using adjacency list
             adj = [[] for _ in range(self.G.size + 1)]
             for edge2 in self.Tl:
                 adj[edge2.u].append(edge2)
                 adj[edge2.v].append(edge2)
             C[:] = []
-            # print(edge.u, adj)
             dfs(edge.u, -1, adj, edge.v, [])
             C.append(edge)
-            # print("Cycle: ", C)
+            # C is the set of edges which denote the cycle formed by adding 'edge'
             self.Tl.add(edge)
+            # Unless C does not contain always maximal edge
             while check(C):
                 uppers = []
                 firstUpper = 0
                 firstEdge = 0
+                # Find the two edges with maximum upper limits
                 for i in range(len(C)):
                     if C[i].upper > firstUpper:
                         firstUpper = C[i].upper
@@ -78,7 +86,7 @@ class CycleModel:
                         secondUpper = C[i].upper
                         secondInd = i
                 secondEdge = C[secondInd]
-                # print("First: ", firstEdge, "Second: ", secondEdge)
+                # If the first edge is not trivial, then query it
                 if not firstEdge.trivial:
                     self.Q.add(deepcopy(firstEdge))
                     self.Tl.remove(firstEdge)
@@ -89,6 +97,7 @@ class CycleModel:
                     firstEdge.trivial = True
                     self.Tl.add(firstEdge)
                     C.append(firstEdge)
+                # If the second edge is not trivial, then query it
                 if not secondEdge.trivial:
                     self.Q.add(deepcopy(secondEdge))
                     self.Tl.remove(secondEdge)
@@ -99,8 +108,8 @@ class CycleModel:
                     secondEdge.trivial = True
                     self.Tl.add(secondEdge)
                     C.append(secondEdge)
-                # print(C)
 
+            # If an always maximal edge is found, erase it from Lower Limit Tree
             if len(C):
                 uppers = []
                 for edge in C:
@@ -110,5 +119,4 @@ class CycleModel:
                 for edge in C:
                     if edge.upper == uppers[-1] and (edge.trivial or edge.lower >= uppers[-2]):
                         self.Tl.remove(edge)
-                        # print("Removed Edge:", edge)
                         break
