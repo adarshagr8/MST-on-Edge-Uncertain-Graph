@@ -1,4 +1,5 @@
 class UnionFind:
+    """Union Find/Disjoin Set Union data structure."""
     def __init__(self, n):
         self.parent = [0]*n
         self.size = [0]*n
@@ -30,6 +31,7 @@ class UnionFind:
 
 
 class Graph:
+    """Class for storing weighted graphs and finding its minimum spanning tree."""
     def __init__(self, edgeList):
         self.size = 0
         self.edges = []
@@ -46,6 +48,7 @@ class Graph:
         self.edges.append(edge)
 
     def kruskalMST(self):
+        """Implements kruskal's MST algorithm(assuming that edges were added in the sorted order) and returs the set of edges in the MST."""
         comps = UnionFind(self.size + 1)
         mstEdges = set()
         for e in self.edges:
@@ -56,6 +59,7 @@ class Graph:
 
 
 class UncertainEdge:
+    """Class for storing uncertain edges."""
     def __init__(self, u, v, lower, upper, actual, index):
         self.u = u
         self.v = v
@@ -86,6 +90,7 @@ class UncertainEdge:
 
 
 class UncertainGraph:
+    """Class for storing and manipulating uncertain graphs."""
     def __init__(self):
         self.edges = set()
 
@@ -132,6 +137,7 @@ class UncertainGraph:
 
 
 class DynamicForest:
+    """Class for storing forests (collection of trees). Supports addition/removal of edges and also allows for generating the unique cycle closed by an edge in the forest."""
     def __init__(self, n):
         self.size = n
         self.edges = set()
@@ -153,9 +159,11 @@ class DynamicForest:
             self.comps.unite(e.u, e.v)
 
     def cycleCheck(self, edge):
+        """Checks if an edge encloses a cycle in the forest or not."""
         return self.comps.findSet(edge.u) == self.comps.findSet(edge.v)
 
     def dfs(self, node, target, cycleEdges, par):
+        """Simple DFS algorithm for finding the unique path between two vertices in the forest."""
         if node == target:
             return 1
         for e in self.adj[node]:
@@ -170,6 +178,7 @@ class DynamicForest:
         return 0
 
     def getCycle(self, edge):
+        """Returns the cycle enclosed by the edge in the forest."""
         cycleEdges = [edge]
         self.dfs(edge.u, edge.v, cycleEdges, -1)
         return cycleEdges

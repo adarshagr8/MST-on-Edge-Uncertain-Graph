@@ -1,7 +1,9 @@
 from collections import deque
 
 class BipartiteGraph:
+    """Supports finding maximum matching and minimum vertex cover of bipartite graphs."""
     def __init__(self, edges):
+        """Takes in a collection of edges (described by 2-tuples) to build the bipartite graph."""
         n = m = 0
         for e in edges:
             if e[0] > n:
@@ -27,6 +29,7 @@ class BipartiteGraph:
         self.adj[a].append(b)
 
     def dfs(self, a, L):
+        """Updates the matching by utilising the augmenting paths."""
         if self.layerA[a] != L:
             return 0
         for b in self.adj[a]:
@@ -41,6 +44,7 @@ class BipartiteGraph:
         return 0
 
     def maximumMatching(self):
+        """Finds the maximum matching and stores it in the rightToLeft and leftToRight lists."""
         res = 0
         cur = []
         nxt = []
@@ -64,6 +68,7 @@ class BipartiteGraph:
             # print("btoa is", self.rightToLeft)
             # print("layerA is", self.layerA)
             # print("layerB is", self.layerB)
+
             # Find all layers using BFS
             lay = 1 
             while True:
@@ -98,6 +103,7 @@ class BipartiteGraph:
                 res += self.dfs(a, 0)
 
     def minimumVertexCover(self):
+        """Builds the minimum vertex cover using the maximum matching based on the constructive proof of Konig's theorem."""
         self.maximumMatching()
         left = set()
         right = set()
@@ -120,7 +126,7 @@ class BipartiteGraph:
             if self.rightToLeft[i] != -1:
                 self.leftToRight[self.rightToLeft[i]] = i
         
-        bfs = deque()        
+        bfs = deque()
         for u in unmatchedLeft:
             bfs.append((1, u))
             leftZ.add(u)

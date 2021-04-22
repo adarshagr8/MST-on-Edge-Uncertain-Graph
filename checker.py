@@ -4,7 +4,8 @@ from copy import deepcopy
 eps = 1e-12
 # checker for query set
 def checkQuerySet(g, querySet):
-	# build updated graph by querying edges in the query set
+	"""Checks the validity of the query set with respect to the given uncertain graph."""
+	# Build updated graph by querying edges in the query set first
 	updatedGraph = deepcopy(g)
 	newQuerySet = set()
 	for e in querySet:
@@ -18,11 +19,9 @@ def checkQuerySet(g, querySet):
 			e.query()
 	# print("Updated Graph:")
 	# print(updatedGraph)
-	# find a candidate uncertain MST in updated graph
-	# we only care about non-trivial edges of uncertain MST as trivial edges can be interchanged
-	# for this we need to assign unique weights to all non-trivial edges in a particular realization
-	# It is easy to prove that such a realization always exists using the fact that open intervals contain infinite no of points
-	# and intersection of two open intervals if it exists is also open.
+
+	# Find a candidate uncertain MST in the updated graph
+	# For this we need to assign unique weights to all non-trivial edges in a particular realization.
 	usedWeights = set()
 	for e in updatedGraph.edges:
 		if e.trivial:
@@ -35,20 +34,18 @@ def checkQuerySet(g, querySet):
 			assert cur < e.upper
 			usedWeights.add(cur)
 			e.actual = cur
-				
+	
+	# Sort all edges according to the previously generated realization and find an MST			
 	lowerEdges = sorted(list(updatedGraph.edges), key = lambda x: x.actual)
 	lowerGraph = Graph(lowerEdges)
 	candidateMST = lowerGraph.kruskalMST()
-	# check if this candidate MST stays an MST for all valid realizations
-	# but what if the answer isn't unique? Then all possible answers will have non-trivial edges in common.
-	# => All possible uncertain MSTs can be converted to one another by swapping trivial edges only
-	# => So checking only one candidate MST is sufficient
-	# To check this, all non-MST edges must be always-maximal but not necessarily in a strict sense (i.e. >= is fine)
+	# Check if this candidate MST stays an MST for all valid realizations
 	outsideEdges = []
 	for e in updatedGraph.edges:
 		if e not in candidateMST:
 			outsideEdges.append(e)
 
+	# For this to be true, all outside edges must be maximal (but not necessarily in a strict sense).
 	lowerTree = DynamicForest(updatedGraph.size)
 	for e in candidateMST:
 		# sanity check for no cycle in lower MST
@@ -57,8 +54,9 @@ def checkQuerySet(g, querySet):
 
 	for e in outsideEdges:
 		cycle = lowerTree.getCycle(e)
-		# sanity check for cycle
+		# sanity check for cycle length
 		assert len(cycle) > 1
+		# check if the added outside edge is maximal or not
 		for i in range(1, len(cycle)):
 			if cycle[i].upper > cycle[0].lower:
 				return False
@@ -66,6 +64,7 @@ def checkQuerySet(g, querySet):
 
 
 def bruteOPT(g):
+	"""Brute force for finding optimal query set for a given uncertain graph."""
 	nonTrivialEdges = []
 	optimalSet = []
 	for e in g.edges:
@@ -74,6 +73,7 @@ def bruteOPT(g):
 			nonTrivialEdges.append(e)
 
 	n = len(nonTrivialEdges)
+	# Iterate over all subsets of non-trivial edges and check if it forms a valid query set and update the answer if it does.
 	for mask in range(1 << n):
 		querySet = []
 		for j in range(n):
@@ -86,6 +86,7 @@ def bruteOPT(g):
 
 
 def checkOPT(g, querySet):
+	"""Checks if the query set is optimal or not with respect to the given uncertain graph."""
 	# print(bruteOPT(g))
 	# assert len(querySet) == len(bruteOPT(g))
 	return checkQuerySet(g, querySet) and len(querySet) == len(bruteOPT(g))
