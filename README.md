@@ -19,4 +19,4 @@ Here we will describe the function of each file:
 | optimal.py | Optimal Algorithm which generates the minimum possible query set for the given uncertain graph |
 | algoCycle.py | The first greedy algorithm to be tested |
 | algoCut.py | The second greedy algorithm to be tested |
-| bipartite.py | |
+| bipartite.py | Implements algorithms for finding maximum matching and minimum vertex cover in bipartite graphs |
