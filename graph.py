@@ -60,7 +60,7 @@ class Graph:
 
 class UncertainEdge:
     """Class for storing uncertain edges."""
-    def __init__(self, u, v, lower, upper, actual, index):
+    def __init__(self, u, v, lower, upper, actual, index, cost):
         self.u = u
         self.v = v
         self.lower = lower
@@ -68,6 +68,7 @@ class UncertainEdge:
         self.actual = actual
         self.index = index
         self.trivial = (lower == upper)
+        self.cost = cost
 
     def query(self):
         self.lower = self.upper = self.actual
@@ -94,32 +95,32 @@ class UncertainGraph:
     def __init__(self):
         self.edges = set()
 
-    def buildFromParameters(self, n, edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual):
+    def buildFromParameters(self, n, edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual, edgeCost):
         self.size = n
         m = len(edgeFrom)
         assert len(edgeTo) == m and len(edgeLo) == m and len(
             edgeHi) == m and len(edgeActual) == m
         for i in range(m):
             self.edges.add(UncertainEdge(
-                edgeFrom[i], edgeTo[i], edgeLo[i], edgeHi[i], edgeActual[i], i))
+                edgeFrom[i], edgeTo[i], edgeLo[i], edgeHi[i], edgeActual[i], i, edgeCost[i]))
 
     def buildFromInput(self):
         self.size = int(input("Enter number of nodes: "))
         m = int(input("Enter number of edges: "))
         for i in range(m):
-            u, v, lower, upper, actual = list(
+            u, v, lower, upper, actual, cost = list(
                 map(int, input("Enter edge " + str(i + 1) + " : ").split()))
-            self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
+            self.edges.add(UncertainEdge(u, v, lower, upper, actual, i, cost))
 
     def buildFromFile(self, s):
         f = open(s, "r")
         self.size, m = map(int, f.readline().split())
 
         for i in range(m):
-            u, v, lower, upper, actual = f.readline().split()
-            u, v = map(int, [u, v])
+            u, v, lower, upper, actual, cost = f.readline().split()
+            u, v, cost = map(int, [u, v, cost])
             lower, upper, actual = map(float, [lower, upper, actual])
-            self.edges.add(UncertainEdge(u, v, lower, upper, actual, i))
+            self.edges.add(UncertainEdge(u, v, lower, upper, actual, i, cost))
 
     def query(self, edge):
         # self.edges.remove(edge)
