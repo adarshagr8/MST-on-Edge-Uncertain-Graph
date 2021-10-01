@@ -1,5 +1,5 @@
 from graph import *
-from bipartite import *
+from bipartite_weighted import *
 from functools import cmp_to_key
 from copy import deepcopy
 from checker import *
@@ -13,7 +13,7 @@ def compareEdges(e, f):
 		return 0
 
 
-def optimalQuerySet(g):
+def weightedOptimalQuerySet(g):
 	"""Generates an optimal query set for the given uncertain graph."""
 	# PHASE 1
 	# Sort edges according to the comparator above and add them to an empty forest in the sorted order.
