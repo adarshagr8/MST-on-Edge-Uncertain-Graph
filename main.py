@@ -1,7 +1,6 @@
-
 from graph import *
 from checker import *
-from optimal import *
+from weightedOptimal import *
 from generator import *
 from algoCycle import *
 from algoCut import *
@@ -59,7 +58,7 @@ for i in range(1, testcases + 1):
     g = generatorObject.constructGraphB(
         100, 200, random.uniform(0, 100), random.uniform(100, 200))
     # print(g)
-    optimalSet = optimalQuerySet(g)
+    optimalSet = weightedOptimalQuerySet(g)
     # assert checkOPT(g, optimalSet)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q

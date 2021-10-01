@@ -60,7 +60,7 @@ class Graph:
 
 class UncertainEdge:
     """Class for storing uncertain edges."""
-    def __init__(self, u, v, lower, upper, actual, index, cost):
+    def __init__(self, u, v, lower, upper, actual, index, cost = 1):
         self.u = u
         self.v = v
         self.lower = lower
@@ -76,18 +76,18 @@ class UncertainEdge:
         return self.actual
 
     def __str__(self):
-        return str(self.u) + ' ' + str(self.v) + ' ' + str(self.lower) + ' ' + str(self.upper) + ' ' + str(self.actual)
+        return str(self.u) + ' ' + str(self.v) + ' ' + str(self.lower) + ' ' + str(self.upper) + ' ' + str(self.actual) + ' ' + str(self.cost)
 
     __repr__ = __str__
 
     def __eq__(self, other):
-        return (self.u, self.v, self.lower, self.upper, self.actual, self.index) == (other.u, other.v, other.lower, other.upper, other.actual, other.index)
+        return (self.u, self.v, self.lower, self.upper, self.actual, self.cost, self.index) == (other.u, other.v, other.lower, other.upper, other.actual, other.cost, other.index)
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((self.u, self.v, self.lower, self.upper, self.actual, self.index))
+        return hash((self.u, self.v, self.lower, self.upper, self.actual, self.cost, self.index))
 
 
 class UncertainGraph:
@@ -95,14 +95,14 @@ class UncertainGraph:
     def __init__(self):
         self.edges = set()
 
-    def buildFromParameters(self, n, edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual, edgeCost):
+    def buildFromParameters(self, n, edgeFrom, edgeTo, edgeLo, edgeHi, edgeActual, edgeCost = None):
         self.size = n
         m = len(edgeFrom)
         assert len(edgeTo) == m and len(edgeLo) == m and len(
             edgeHi) == m and len(edgeActual) == m
         for i in range(m):
             self.edges.add(UncertainEdge(
-                edgeFrom[i], edgeTo[i], edgeLo[i], edgeHi[i], edgeActual[i], i, edgeCost[i]))
+                edgeFrom[i], edgeTo[i], edgeLo[i], edgeHi[i], edgeActual[i], i, edgeCost[i] if edgeCost else 1))
 
     def buildFromInput(self):
         self.size = int(input("Enter number of nodes: "))
