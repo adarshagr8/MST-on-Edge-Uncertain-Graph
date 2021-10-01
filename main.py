@@ -13,6 +13,7 @@ script_dir = os.path.dirname(__file__)
 
 def CompetitiveRatio(a, b):
     if b == 0:
+        assert a == 0
         return 1.0
     else:
         return a/b

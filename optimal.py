@@ -75,7 +75,7 @@ def optimalQuerySet(g):
 					break
 
 		# If candidate has maximal actual weight and there is an edge with its actual weight more than the candidate's lower limit
-		# then the candidate must be queried in any update solution. 
+		# then the candidate must be queried in any update solution.
 		if not flag:
 			for e in cycle:
 				if e.actual > candidate.lower and e != candidate:
@@ -127,11 +127,14 @@ def optimalQuerySet(g):
 	# {(d, b) : there exists a (d, B) belonging to choices s.t. b belongs to B} corresponds to an optimal query set. 
 	# Left side of the bipartite graph corresponds to L and right to R.
 	# Number the left vertices
+	leftWeights = []
+	rightWeights = []
 	leftEdgeToIndex = {}
 	leftEdges = []
 	for d, B in choices:
 		leftEdgeToIndex[d] = len(leftEdges)
 		leftEdges.append(d)
+		leftWeights.append(d.cost)
 
 	# Generate the union of all Bs s.t. (d, B) belongs to choices
 	choiceUnion = set()
@@ -144,6 +147,8 @@ def optimalQuerySet(g):
 	rightEdgeToIndex = {}
 	for e in rightEdges:
 		rightEdgeToIndex[e] = len(rightEdgeToIndex)
+		rightWeights.append(e.cost)
+
 
 	edgesInGprime = []
 	for d, B in choices:
@@ -151,7 +156,9 @@ def optimalQuerySet(g):
 			edgesInGprime.append((leftEdgeToIndex[d], rightEdgeToIndex[e]))
 
 	# Find minimum vertex cover and recover solution from it and return
-	graph = BipartiteGraph(edgesInGprime)
+
+
+	graph = WeightedBipartiteGraph(edgesInGprime)
 	minVertexCover = graph.minimumVertexCover()
 	for side, index in minVertexCover:
 		if side == 1:
