@@ -79,7 +79,7 @@ def bruteOPT(g):
 		for j in range(n):
 			if mask & (1 << j):
 				querySet.append(nonTrivialEdges[j])
-		if checkQuerySet(g, querySet) and len(querySet) < len(optimalSet):
+		if checkQuerySet(g, querySet) and getTotalQueryCost(querySet) < getTotalQueryCost(optimalSet):
 			optimalSet = querySet
 	return optimalSet
 
@@ -89,5 +89,5 @@ def checkOPT(g, querySet):
 	"""Checks if the query set is optimal or not with respect to the given uncertain graph."""
 	# print(bruteOPT(g))
 	# assert len(querySet) == len(bruteOPT(g))
-	return checkQuerySet(g, querySet) and len(querySet) == len(bruteOPT(g))
+	return checkQuerySet(g, querySet) and getTotalQueryCost(querySet) == getTotalQueryCost(bruteOPT(g))
 

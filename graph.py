@@ -29,6 +29,11 @@ class UnionFind:
         self.size[a] += self.size[b]
         return True
 
+def getTotalQueryCost(Q):
+    res = 0
+    for e in Q:
+        res += e.cost
+    return res
 
 class Graph:
     """Class for storing weighted graphs and finding its minimum spanning tree."""

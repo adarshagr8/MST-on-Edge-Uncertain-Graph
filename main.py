@@ -2,7 +2,6 @@ from graph import *
 from checker import *
 from weightedOptimal import *
 from weightedAlgoCycle import *
-from weightedAlgoCut import *
 from generator import *
 # from algoCycle import *
 # from algoCut import *
@@ -34,17 +33,11 @@ for i in range(1, 10):
     # print(optimal Set)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q
-    algoCutObject = CutModel(g)
-    algoCutQuery = algoCutObject.Q
-    print("Algo Cycle Competitve Ratio:", CompetitiveRatio(len(
-        algoCycleQuery), len(optimalSet)))
-    print("Algo Cut Competitve Ratio:", CompetitiveRatio(len(
-        algoCutQuery), len(optimalSet)))
+    print("Algo Cycle Competitve Ratio:", CompetitiveRatio(getTotalQueryCost(
+        algoCycleQuery), getTotalQueryCost(optimalSet)))
     # print(len(algoCutQuery), len(optimalSet))
-    assert len(algoCycleQuery) <= 2 * len(optimalSet)
+    assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
     assert checkQuerySet(g, algoCycleQuery)
-    assert len(algoCutQuery) <= 2 * len(optimalSet)
-    assert checkQuerySet(g, algoCutQuery)
     print("Test " + str(i) + " passed!")
 
 
@@ -68,19 +61,12 @@ for i in range(1, testcases + 1):
     # assert checkOPT(g, optimalSet)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q
-    algoCutObject = CutModel(g)
-    algoCutQuery = algoCutObject.Q
-    print("Algo Cycle Competitve Ratio:", CompetitiveRatio(len(
-        algoCycleQuery), len(optimalSet)))
-    print("Algo Cut Competitve Ratio:", CompetitiveRatio(len(
-        algoCutQuery), len(optimalSet)))
-    totalCycleSet += len(algoCycleQuery)
-    totalCutSet += len(algoCutQuery)
-    totalOptSet += len(optimalSet)
-    assert len(algoCycleQuery) <= 2 * len(optimalSet)
+    print("Algo Cycle Competitve Ratio:", CompetitiveRatio(getTotalQueryCost(
+        algoCycleQuery), getTotalQueryCost(optimalSet)))
+    totalCycleSet += getTotalQueryCost(algoCycleQuery)
+    totalOptSet += getTotalQueryCost(optimalSet)
+    assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
     assert checkQuerySet(g, algoCycleQuery)
-    assert len(algoCutQuery) <= 2 * len(optimalSet)
-    assert checkQuerySet(g, algoCutQuery)
     print("Random test " + str(i) + " passed!")
 
 print("Average Algo Cycle Competitve Ratio:",

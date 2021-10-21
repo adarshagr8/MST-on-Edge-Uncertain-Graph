@@ -13,18 +13,18 @@ class Preprocessor:
         self.Tl = self.lowerLimitTree()
         # Find the upper limit tree
         self.Tu = self.upperLimitTree()
-        # Find the intersection set edges
-        newEdge = self.findIntersection(self.Tl, self.Tu)
-        # Until there is at least one edge common between lower limit tree and upper limit tree
-        while len(newEdge):
-            # Query for this edge
-            for edge in newEdge:
-                self.query.add(deepcopy(edge))
-                self.G.query(edge)
-            # Update lower limit and upper limit trees
-            self.Tl = self.lowerLimitTree()
-            self.Tu = self.upperLimitTree()
-            newEdge = self.findIntersection(self.Tl, self.Tu)
+        # # Find the intersection set edges
+        # newEdge = self.findIntersection(self.Tl, self.Tu)
+        # # Until there is at least one edge common between lower limit tree and upper limit tree
+        # while len(newEdge):
+        #     # Query for this edge
+        #     for edge in newEdge:
+        #         self.query.add(deepcopy(edge))
+        #         self.G.query(edge)
+        #     # Update lower limit and upper limit trees
+        #     self.Tl = self.lowerLimitTree()
+        #     self.Tu = self.upperLimitTree()
+        #     newEdge = self.findIntersection(self.Tl, self.Tu)
 
     # Custom coparator function to give total ordering of edge in lower limit tree
     def lowerOrderingComparator(self, e1, e2):

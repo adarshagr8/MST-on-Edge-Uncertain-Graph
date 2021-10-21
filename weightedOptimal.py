@@ -158,7 +158,7 @@ def weightedOptimalQuerySet(g):
 	# Find minimum vertex cover and recover solution from it and return
 
 
-	graph = WeightedBipartiteGraph(edgesInGprime)
+	graph = WeightedBipartiteGraph(edgesInGprime, leftWeights, rightWeights)
 	minVertexCover = graph.minimumVertexCover()
 	for side, index in minVertexCover:
 		if side == 1:
