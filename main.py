@@ -1,9 +1,11 @@
 from graph import *
 from checker import *
 from weightedOptimal import *
+from weightedAlgoCycle import *
+from weightedAlgoCut import *
 from generator import *
-from algoCycle import *
-from algoCut import *
+# from algoCycle import *
+# from algoCut import *
 import random
 import os
 
@@ -26,7 +28,7 @@ for i in range(1, 10):
     abs_file_path = os.path.join(script_dir, rel_path)
     g = UncertainGraph()
     g.buildFromFile(abs_file_path)
-    optimalSet = optimalQuerySet(g)
+    optimalSet = weightedOptimalQuerySet(g)
     assert checkOPT(g, optimalSet)
     # print(len(optimalSet))
     # print(optimal Set)
@@ -55,8 +57,12 @@ totalCutSet = 0
 totalOptSet = 0
 for i in range(1, testcases + 1):
     generatorObject = GraphGenerator(debug == 'Y')
-    g = generatorObject.constructGraphB(
-        100, 200, random.uniform(0, 100), random.uniform(100, 200))
+    if random.randint(0, 1):
+        g = generatorObject.constructGraph2B(
+            100, 200, random.uniform(0, 100), random.uniform(100, 200))
+    else:
+        g = generatorObject.constructGraph2A(
+            100, 200, random.uniform(0, 100), random.uniform(100, 200))
     # print(g)
     optimalSet = weightedOptimalQuerySet(g)
     # assert checkOPT(g, optimalSet)

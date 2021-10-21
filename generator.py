@@ -333,11 +333,11 @@ class GraphGenerator:
 
 
     # All the edges are trivial
-    def edgeCaseA(self, n, m, weight):
+    def edgeCase2A(self, n, m, weight):
         return self.costructGraph2A(n, m, weight, weight, weight, 0, 1)
 
     # All the edges are either lo or hi
-    def edgeCaseB(self, n, m, lo, hi):
+    def edgeCase2B(self, n, m, lo, hi):
         if lo > hi:
             lo, hi = hi, lo
         if n > 1000 or m < n-1 or m > n*(n - 1)//2:
@@ -398,5 +398,5 @@ class GraphGenerator:
         return graph
 
     # Complete Graph
-    def edgeCaseC(self, n, lo, hi, centre=None, deviation=0.5, trivialProbability=0.5):
+    def edgeCase2C(self, n, lo, hi, centre=None, deviation=0.5, trivialProbability=0.5):
         return self.costructGraph2A(n, n*(n-1)//2, lo, hi, centre, deviation, trivialProbability)
