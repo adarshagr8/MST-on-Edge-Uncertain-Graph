@@ -10,13 +10,31 @@ import os
 
 script_dir = os.path.dirname(__file__)
 
-
 def CompetitiveRatio(a, b):
     if b == 0:
         assert a == 0
         return 1.0
     else:
         return a/b
+
+def runLargeTest(fileName):
+    print("Running on large network")
+    rel_path = "tests/" + fileName
+    abs_file_path = os.path.join(script_dir, rel_path)
+    g = UncertainGraph()
+    g.buildFromFile(abs_file_path)
+    optimalSet = weightedOptimalQuerySet(g)
+    # assert checkOPT(g, optimalSet)
+    # print(len(optimalSet))
+    # print(optimal Set)
+    algoCycleObject = CycleModel(g)
+    algoCycleQuery = algoCycleObject.Q
+    print("Algo Cycle Competitve Ratio:", CompetitiveRatio(getTotalQueryCost(
+        algoCycleQuery), getTotalQueryCost(optimalSet)))
+    print(len(algoCycleQuery), len(optimalSet))
+    assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
+    assert checkQuerySet(g, algoCycleQuery)
+    print("Test Passed!")
 
 
 # TESTING for optimal query set
@@ -39,6 +57,10 @@ for i in range(1, 10):
     assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
     assert checkQuerySet(g, algoCycleQuery)
     print("Test " + str(i) + " passed!")
+
+
+for i in [100, 200, 500, 1000]:
+    runLargeTest("USA" + str(i) + ".gr")
 
 
 # randomly generated cases
@@ -73,3 +95,4 @@ print("Average Algo Cycle Competitve Ratio:",
       CompetitiveRatio(totalCycleSet, totalOptSet))
 print("Average Algo Cut Competitve Ratio:",
       CompetitiveRatio(totalCutSet, totalOptSet))
+
