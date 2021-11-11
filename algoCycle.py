@@ -41,7 +41,8 @@ class CycleModel:
                     dfs(v.u + v.v - u, u, adj, last, edges)
                     edges.remove(v)
 
-        # Function to check whether the edgeSet contains in always maximal edge
+        
+        # Function to check whether the edgeSet contains an always maximal edge
         def check(edgeSet):
             if len(edgeSet) <= 1:
                 return False

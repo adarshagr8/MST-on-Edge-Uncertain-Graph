@@ -21,13 +21,14 @@ class CycleModel:
         f = self.G.edges
         removed = set()
         for edge in self.Tl:
-            removed.add((edge.u, edge.v))
+            removed.add(edge)
         erased = set()
         for edge in f:
-            if (edge.u, edge.v) in removed or (edge.v, edge.u) in removed:
+            if edge in removed:
                 erased.add(edge)
         for edge in erased:
             f.remove(edge)
+        # print("f is", f)
         # f is a set of edges not present in lower limit tree
         C = []
 
