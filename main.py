@@ -61,7 +61,7 @@ for i in range(1, 10):
     print("Test " + str(i) + " passed!")
 
 
-for i in [10, 100, 200, 500, 1000]:
+for i in [4, 10, 100, 200, 500, 1000]:
     runLargeTest("USA" + str(i) + ".gr")
 
 

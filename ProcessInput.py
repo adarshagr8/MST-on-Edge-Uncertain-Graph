@@ -2,7 +2,7 @@ import numpy as np
 from numpy import random
 
 d = 0.08
-nodes = [10, 100, 200, 500, 1000]
+nodes = [4, 10, 100, 200, 500, 1000]
 edges = []
 adjList = {}
 f = open("./tests/USARoadDataSet.gr", "r+")
