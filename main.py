@@ -30,9 +30,9 @@ def runLargeTest(fileName):
     # print(optimal Set)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q
+    print(len(algoCycleQuery), len(optimalSet))
     print("Algo Cycle Competitve Ratio:", CompetitiveRatio(getTotalQueryCost(
         algoCycleQuery), getTotalQueryCost(optimalSet)))
-    print(len(algoCycleQuery), len(optimalSet))
     assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
     assert checkQuerySet(g, algoCycleQuery)
     print("Test Passed!")
