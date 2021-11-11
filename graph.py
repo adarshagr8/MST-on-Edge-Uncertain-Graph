@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 class UnionFind:
     """Union Find/Disjoin Set Union data structure."""
     def __init__(self, n):
@@ -135,6 +137,28 @@ class UncertainGraph:
     def output(self):
         print(self.size)
         print(self.edges)
+
+    def normalize(self):
+        edgeCosts = set()
+        for edge in self.edges:
+            edgeCosts.add(edge.lower)
+            edgeCosts.add(edge.upper)
+            edgeCosts.add(edge.actual)
+        edgeList = list(edgeCosts)
+        edgeId = {}
+        edgeList.sort()
+        id = 1
+        for i in edgeList:
+            edgeId[i] = id 
+            id += 1
+        newEdges = set()
+        for i in self.edges:
+            edge = deepcopy(i)
+            edge.lower = edgeId[i.lower]
+            edge.upper = edgeId[i.upper]
+            edge.actual = edgeId[i.actual]
+            newEdges.add(edge)
+        self.edges = newEdges
 
     def __str__(self):
         return str(self.edges)

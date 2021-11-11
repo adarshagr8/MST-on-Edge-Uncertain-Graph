@@ -219,7 +219,7 @@ class GraphGenerator:
             assert False
         if self.debug:
             print(
-                f"Constructing graph with n = {n}, m = {m}, lo = {lo}, hi = {hi}, centre = {centre}, deviation = {deviation} and trivialProbability = {trivialProbability}.")
+                f"Constructing graph with n = {n}, m = {m}, lo = {lo}, hi = {hi} and trivialProbability = {trivialProbability}.")
         if lo != hi:
             lo += EPS
             hi -= EPS

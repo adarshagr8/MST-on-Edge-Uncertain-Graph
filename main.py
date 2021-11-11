@@ -3,6 +3,7 @@ from checker import *
 from weightedOptimal import *
 from weightedAlgoCycle import *
 from generator import *
+from ProcessInput import *
 # from algoCycle import *
 # from algoCut import *
 import random
@@ -17,21 +18,26 @@ def CompetitiveRatio(a, b):
     else:
         return a/b
 
-def runLargeTest(fileName):
-    print("Running on large network: " + fileName)
-    rel_path = "tests/" + fileName
+def runLargeTest(nodes, competitiveRatios, costGreedy, costOptimal):
+    print("Running on large network: " + str(nodes) + " nodes")
+    rel_path = "tests/" + "USA" + str(nodes) + ".gr"
     abs_file_path = os.path.join(script_dir, rel_path)
     g = UncertainGraph()
     g.buildFromFile(abs_file_path)
     optimalSet = weightedOptimalQuerySet(g)
-    # assert checkOPT(g, optimalSet)
+    assert checkOPT(g, optimalSet)
     # print(len(optimalSet))
     # print(optimal Set)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q
-    print("Algo Cycle Competitve Ratio:", CompetitiveRatio(getTotalQueryCost(
-        algoCycleQuery), getTotalQueryCost(optimalSet)))
+    cr = CompetitiveRatio(getTotalQueryCost(algoCycleQuery), getTotalQueryCost(optimalSet))
+    competitiveRatios[nodes] = competitiveRatios.get(nodes, 0) + cr
+    costGreedy[nodes] = costGreedy.get(nodes, 0) + getTotalQueryCost(algoCycleQuery)
+    costOptimal[nodes] = costOptimal.get(nodes, 0) + getTotalQueryCost(optimalSet)
+    print("Algo Cycle Competitve Ratio:", cr)
+
     assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
+    assert getTotalQueryCost(optimalSet) <= getTotalQueryCost(algoCycleQuery)
     assert checkQuerySet(g, algoCycleQuery)
     print("Test Passed!")
 
@@ -55,13 +61,22 @@ for i in range(1, 10):
         algoCycleQuery), getTotalQueryCost(optimalSet)))
     # print(len(algoCutQuery), len(optimalSet))
     assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
+    assert getTotalQueryCost(optimalSet) <= getTotalQueryCost(algoCycleQuery)
     assert checkQuerySet(g, algoCycleQuery)
     print("Test " + str(i) + " passed!")
 
+competitiveRatios = {}
+costGreedy = {}
+costOptimal = {}
 
-for i in [4, 10, 100, 200, 500, 1000]:
-    runLargeTest("USA" + str(i) + ".gr")
+# for run in range(10000):
+#     for i in [10]:
+#         generateGraphs()
+#         runLargeTest(i, competitiveRatios, costGreedy, costOptimal)
 
+print(competitiveRatios)
+print(costGreedy)
+print(costOptimal)
 
 # randomly generated cases
 testcases = 0
@@ -74,13 +89,14 @@ for i in range(1, testcases + 1):
     generatorObject = GraphGenerator(debug == 'Y')
     if random.randint(0, 1):
         g = generatorObject.constructGraph2B(
-            100, 200, random.uniform(0, 100), random.uniform(100, 200))
+            8, 15, random.uniform(0, 100), random.uniform(100, 200))
     else:
         g = generatorObject.constructGraph2A(
-            100, 200, random.uniform(0, 100), random.uniform(100, 200))
-    # print(g)
+            8, 15, random.uniform(0, 100), random.uniform(100, 200))
+    g.normalize()
     optimalSet = weightedOptimalQuerySet(g)
-    # assert checkOPT(g, optimalSet)
+    print(g)
+    assert checkOPT(g, optimalSet)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q
     print("Algo Cycle Competitve Ratio:", CompetitiveRatio(getTotalQueryCost(
@@ -88,6 +104,7 @@ for i in range(1, testcases + 1):
     totalCycleSet += getTotalQueryCost(algoCycleQuery)
     totalOptSet += getTotalQueryCost(optimalSet)
     assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
+    assert getTotalQueryCost(optimalSet) <= getTotalQueryCost(algoCycleQuery)
     assert checkQuerySet(g, algoCycleQuery)
     print("Random test " + str(i) + " passed!")
 
