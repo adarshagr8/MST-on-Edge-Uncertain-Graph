@@ -23,17 +23,14 @@ def runLargeTest(fileName):
     abs_file_path = os.path.join(script_dir, rel_path)
     g = UncertainGraph()
     g.buildFromFile(abs_file_path)
-    # print(g)
     optimalSet = weightedOptimalQuerySet(g)
     # assert checkOPT(g, optimalSet)
     # print(len(optimalSet))
     # print(optimal Set)
     algoCycleObject = CycleModel(g)
-    # print("here", algoCycleObject.Q)
     algoCycleQuery = algoCycleObject.Q
     print("Algo Cycle Competitve Ratio:", CompetitiveRatio(getTotalQueryCost(
         algoCycleQuery), getTotalQueryCost(optimalSet)))
-    print(getTotalQueryCost(algoCycleQuery), getTotalQueryCost(optimalSet))
     assert getTotalQueryCost(algoCycleQuery) <= 2 * getTotalQueryCost(optimalSet)
     assert checkQuerySet(g, algoCycleQuery)
     print("Test Passed!")

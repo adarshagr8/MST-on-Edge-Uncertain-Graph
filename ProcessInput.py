@@ -6,7 +6,7 @@ nodes = [4, 10, 100, 200, 500, 1000]
 edges = []
 adjList = {}
 f = open("./tests/USARoadDataSet.gr", "r+")
-
+ 
 for line in f:
     u, v, lo, hi, actual, cost = map(int, line.split())
     if u not in adjList:
@@ -16,6 +16,18 @@ for line in f:
     adjList[u].append(v)
     adjList[v].append(u)
     edges.append([u, v, lo, hi, actual, cost])
+
+def removeMultiEdges():
+    global edges
+    edgeDic = {}
+    for e in edges:
+        edgeDic[(min(e[0], e[1]), max(e[0], e[1]))] = e
+    newEdges = []
+    for e in edgeDic.values():
+        newEdges.append(e)
+    edges = newEdges
+
+removeMultiEdges()
 
 for n in nodes:
     newContent = []
