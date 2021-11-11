@@ -89,10 +89,10 @@ for i in range(1, testcases + 1):
     generatorObject = GraphGenerator(debug == 'Y')
     if random.randint(0, 1):
         g = generatorObject.constructGraph2B(
-            8, 15, random.uniform(0, 100), random.uniform(100, 200))
+            4, 6, random.uniform(0, 100), random.uniform(100, 200))
     else:
         g = generatorObject.constructGraph2A(
-            8, 15, random.uniform(0, 100), random.uniform(100, 200))
+            4, 6, random.uniform(0, 100), random.uniform(100, 200))
     g.normalize()
     optimalSet = weightedOptimalQuerySet(g)
     print(g)
