@@ -43,6 +43,7 @@ for n in nodes:
     nodeList = list(visited)
     nodeList.sort()
     nodeId = {}
+    edgeSet = set()
     id = 1
     for i in nodeList:
         nodeId[i] = id 
@@ -54,11 +55,21 @@ for n in nodes:
         edge += 1
         degree[line[0]] = degree.get(line[0], 0) + 1
         degree[line[1]] = degree.get(line[1], 0) + 1
+        edgeSet.add(line[2])
+        edgeSet.add(line[3])
+        edgeSet.add(line[4])
         line.pop()
         newContent.append(line)
 
     g.write(str(count) + " " + str(edge) + "\n")
 
+    edgeList = list(edgeSet)
+    edgeList.sort()
+    edgeId = {}
+    id = 1
+    for i in edgeList:
+        edgeId[i] = id 
+        id += 1
     mxDeg = 0
     for i in range(len(newContent)):
         line = newContent[i]
@@ -76,6 +87,9 @@ for n in nodes:
         newContent[i][5] = cost
         newContent[i][0] = nodeId[newContent[i][0]]
         newContent[i][1] = nodeId[newContent[i][1]]
+        newContent[i][2] = edgeId[newContent[i][2]]
+        newContent[i][3] = edgeId[newContent[i][3]]
+        newContent[i][4] = edgeId[newContent[i][4]]
         newContent[i] = ' '.join(map(str, newContent[i]))
 
     # print(newContent)
