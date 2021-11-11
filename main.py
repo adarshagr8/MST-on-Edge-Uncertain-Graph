@@ -18,11 +18,12 @@ def CompetitiveRatio(a, b):
         return a/b
 
 def runLargeTest(fileName):
-    print("Running on large network")
+    print("Running on large network: " + fileName)
     rel_path = "tests/" + fileName
     abs_file_path = os.path.join(script_dir, rel_path)
     g = UncertainGraph()
     g.buildFromFile(abs_file_path)
+    print(g)
     optimalSet = weightedOptimalQuerySet(g)
     # assert checkOPT(g, optimalSet)
     # print(len(optimalSet))
@@ -45,6 +46,7 @@ for i in range(1, 10):
     abs_file_path = os.path.join(script_dir, rel_path)
     g = UncertainGraph()
     g.buildFromFile(abs_file_path)
+
     optimalSet = weightedOptimalQuerySet(g)
     assert checkOPT(g, optimalSet)
     # print(len(optimalSet))
@@ -59,7 +61,7 @@ for i in range(1, 10):
     print("Test " + str(i) + " passed!")
 
 
-for i in [100, 200, 500, 1000]:
+for i in [10, 100, 200, 500, 1000]:
     runLargeTest("USA" + str(i) + ".gr")
 
 
