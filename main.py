@@ -45,18 +45,20 @@ def runLargeTest(nodes, competitiveRatios, costGreedy, costOptimal):
 # TESTING for optimal query set
 # hand-made cases
 print("TESTING ON HAND-MADE CASES...")
-for i in range(1, 10):
+for i in range(1, 12):
     rel_path = "tests/test" + str(i) + ".txt"
     abs_file_path = os.path.join(script_dir, rel_path)
     g = UncertainGraph()
     g.buildFromFile(abs_file_path)
-
+    print(g)
     optimalSet = weightedOptimalQuerySet(g)
     assert checkOPT(g, optimalSet)
-    # print(len(optimalSet))
-    # print(optimal Set)
+    print(len(optimalSet))
+    print(optimalSet)
     algoCycleObject = CycleModel(g)
     algoCycleQuery = algoCycleObject.Q
+    print(len(algoCycleQuery))
+    print(algoCycleQuery)
     print("Algo Cycle Competitve Ratio:", CompetitiveRatio(getTotalQueryCost(
         algoCycleQuery), getTotalQueryCost(optimalSet)))
     # print(len(algoCutQuery), len(optimalSet))

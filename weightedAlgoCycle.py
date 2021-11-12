@@ -87,8 +87,11 @@ class CycleModel:
                         secondUpper = C[i].upper
                         secondInd = i
                 secondEdge = C[secondInd]
+                print("firstEdge ", firstEdge)
+                print("secondEdge ", secondEdge)
                 # If the first edge is not trivial, then query it
                 if (not firstEdge.trivial) and (secondEdge.trivial or firstEdge.cost <= secondEdge.cost):
+                    print("adding 1st", firstEdge)
                     self.Q.add(deepcopy(firstEdge))
                     self.Tl.remove(firstEdge)
                     self.G.query(firstEdge)
@@ -99,7 +102,8 @@ class CycleModel:
                     self.Tl.add(firstEdge)
                     C.append(firstEdge)
                 # If the second edge is not trivial, then query it
-                if (not secondEdge.trivial) and (firstEdge.trivial or secondEdge.cost < firstEdge.cost):
+                elif (not secondEdge.trivial) and (firstEdge.trivial or secondEdge.cost < firstEdge.cost):
+                    print("adding 2nd", secondEdge)
                     self.Q.add(deepcopy(secondEdge))
                     self.Tl.remove(secondEdge)
                     self.G.query(secondEdge)
